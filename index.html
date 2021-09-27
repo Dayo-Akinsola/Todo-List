@@ -3,22 +3,22 @@
     <head>
         <title>Todo List App</title>
     </head>
-    <script src="main.js"></script>
     <body>
+        <script defer src="main.js"></script>
         <header class="page-header">
             <h2 id="page-heading">Todo List</h2>
             <input type="text" placeholder="Search..." id="search-bar" />
             <div class="add-project-container">
-                <span id="add-project-button">
+                <span class="add-project-button">
                     <span id="addition-symbol">&#43;</span>
-                    <span id="add-project-text">Add Project</span>
+                    <span id="add-project-text">Add New Project</span>
                 </span>
             </div>
         </header>
         <div class="sidebar">
             <ul class="display-categories">
                 <li class="category-item">
-                    <span class="nav-link" id="inbox">Inbox</span>
+                    <span class="nav-link" id="all">All</span>
                 </li>
                 <li class="category-item">
                     <span class="nav-link" id="today">Today</span>
@@ -34,6 +34,66 @@
                 </li>
             </ul>
             <hr>
+            <div class="projects">
+                <h4 id="projects-subheading">Projects</h4>
+                <ul class="project" id="project1">
+                    <li class="sidebar-project">
+                        <span class="sidebar-project-name">Project 1</span>
+                        <div class="sidebar-tasks-collapse hidden">
+                            <ul class="btn-toggle show">
+                                <li class="sidebar-task-title">
+                                    <span>Take out rubbish</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </li> 
+                </ul>
+            </div>
+        </div>
+        <div class="todos-container">
+            <h2 id="todos-heading">All</h2>
+            <ul class="projects-list">
+                <li class="project-details" id="project1">
+                    <div class="project-heading-container">
+                        <div class="project-heading">
+                            <span class="down-arrow">&#8615;</span>
+                            <h3 class="project-name">Project 1</h3>
+                        </div>
+                        <span class="add-task-symbol">&#43;</span>
+                    </div>
+                    <div class="todo-list-items">
+                        <div class="todo-list-item">
+                            <div class="summary-container">
+                                <div class="radio-title-container">
+                                    <input class="todo-check" type="radio" id="task-1" value="Task 1" />
+                                    <span class="todo-title">Take out the rubbish</span>   
+                                </div>
+                                <span class="todo-date">27/09/2021</span>
+                                <div class="details-edit-delete-container">  
+                                    <button class="todo-details">Details</button>     
+                                    <button class="todo-edit">Edit</button>
+                                    <button class="todo-delte">Delete</button>
+                                </div>
+                            </div>
+                            <div class="details-container">
+                                <p class="todo-notes">
+                                    Remember to take recycling and black bin from the the kitchen 
+                                    and take it outside.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="add-project-screen">
+            <form id="add-project-form">
+                <input type="text" id="project-form-name" placeholder="Project Name" required autofocus />
+                <div id="form-buttons">
+                    <input type="submit" value="Add" class="form-button" id="add-project-button" />
+                    <input type="submit" class="form-button" id="cancel-button" value="Cancel" formnovalidate/>
+                </div>
+            </form>
         </div>
     </body>
 </html>
