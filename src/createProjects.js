@@ -7,10 +7,15 @@ class TodoListItem {
         this.dueDate = dueDate;
         this.priority = priority;
         this.id = id();
+        this.complete = false;
     }
 
     changePriority(){
         this.priority = !this.priority;
+    }
+
+    setCompleteStatus(){
+        this.complete = !this.complete;
     }
 }
 
