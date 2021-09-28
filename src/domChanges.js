@@ -1,5 +1,6 @@
 import { Project } from './createProjects.js'
 
+// Function to display a created project on the main part of the page.
 const addNewProject = (project) => {
     const projectsList = document.querySelector('.projects-list');
     const projectElement = document.createElement('li');
@@ -25,6 +26,20 @@ const addNewProject = (project) => {
     projectsList.appendChild(projectElement); 
 }
 
+const addNewProjectToSidebar = (project) => {
+    const projectsList = document.querySelector('.sidebar-projects-list');
+    const sidebarProject = document.createElement('li');
+    sidebarProject.classList.add('sidebar-project');
+    sidebarProject.setAttribute('data-projectId', project.id);
+
+    const sidebarProjectName = document.createElement('span');
+    sidebarProjectName.classList.add('sidebar-project-name');
+    sidebarProjectName.textContent = project.projectName;
+
+    sidebarProject.appendChild(sidebarProjectName);
+    projectsList.appendChild(sidebarProject);
+}
+
 const addNewProjectListener = () => {
     const projectName = document.querySelector('#project-form-name');
     const form = document.querySelector('#add-project-form');
@@ -35,7 +50,9 @@ const addNewProjectListener = () => {
         event.preventDefault();
         const newProject = new Project(projectName.value);
         addNewProject(newProject);
-        
+        addNewProjectToSidebar(newProject);
+        addProjectDisplay.style.display = 'none';
+        projectName.value = '';
     })
 
     cancel.addEventListener('click', () => {
@@ -43,5 +60,14 @@ const addNewProjectListener = () => {
         addProjectDisplay.style.display = 'none';
     })
 }
+
+const algorithms = new Project('Algorithms');
+addNewProject(algorithms);
+addNewProjectToSidebar(algorithms);
+
+const exercise = new Project('Exercise');
+addNewProject(exercise);
+addNewProjectToSidebar(exercise);
+
 
 export { addNewProjectListener }
