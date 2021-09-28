@@ -27,7 +27,7 @@ class Project {
     }
 
 
-    addTodoItem (title, description, dueDate, priority){
+    addTask (title, description, dueDate, priority){
         const task = new Task(title, description, dueDate, priority);
         this.taskArray.push(task);
     }
@@ -37,7 +37,7 @@ class Project {
         removed from the DOM and matching it with the same item in the array.
 
     */
-    removeTodoItem(id){
+    removeTask(id){
         if (this.taskArray.length !== 0){
             for (let i = 0; i < this.taskArray.length; i++){
                 if (this.taskArray[i].id === id){
