@@ -8,6 +8,24 @@ const displayNewProjectForm = () => {
     })
 }
 
+const displayNewTaskForm = () => {
+    const projects = document.querySelectorAll('.project-details');
+    const addTaskForm = document.querySelector('.add-task-screen');
+
+    projects.forEach(project => {
+        const addTaskSymbol = project.querySelector('.add-task-symbol');
+        const projectName = project.querySelector('.project-name');
+        const taskFormName = document.querySelector('#task-form-name');
+        console.log(addTaskSymbol);
+        console.log(taskFormName);
+        addTaskSymbol.addEventListener('click', () => {
+            console.log('hello');
+            addTaskForm.style.display = 'block';
+            taskFormName.placeholder = `Add ${projectName.textContent} task`;
+        })
+    })
+}
+
 const showSidebarProjectTasks = () => {
     const sidebarProjectName = document.querySelector('.sidebar-project-name');
     const sidebarTasksList = document.querySelector('.sidebar-tasks-collapse');
@@ -24,4 +42,4 @@ const showSidebarProjectTasks = () => {
     })
 }
 
-export { displayNewProjectForm, showSidebarProjectTasks }
+export { displayNewProjectForm, showSidebarProjectTasks, displayNewTaskForm }
