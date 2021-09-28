@@ -1,12 +1,12 @@
-import id from './counter'
+import {taskId, projectId} from './counter'
 
-class TodoListItem {
+class Task {
     constructor(title, description, dueDate, priority){
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;
         this.priority = priority;
-        this.id = id();
+        this.id = taskId();
         this.complete = false;
     }
 
@@ -22,14 +22,14 @@ class TodoListItem {
 class Project {
     constructor(projectName){
         this.projectName = projectName;
-        this.todoListItemArray = [];
+        this.taskArray = [];
+        this.id = projectId();
     }
 
 
     addTodoItem (title, description, dueDate, priority){
-        const todoListItem = new TodoListItem(title, description, dueDate, priority);
-        console.log(todoListItem);
-        this.todoListItemArray.push(todoListItem);
+        const task = new Task(title, description, dueDate, priority);
+        this.taskArray.push(task);
     }
 
     /* 
@@ -38,15 +38,15 @@ class Project {
 
     */
     removeTodoItem(id){
-        if (this.todoListItemArray.length !== 0){
-            for (let i = 0; i < this.todoListItemArray.length; i++){
-                if (this.todoListItemArray[i].id === id){
-                    this.todoListItemArray.splice(i, 1);
+        if (this.taskArray.length !== 0){
+            for (let i = 0; i < this.taskArray.length; i++){
+                if (this.taskArray[i].id === id){
+                    this.taskArray.splice(i, 1);
                 }
             }
         }
     }
 }
 
-export { TodoListItem, Project }
+export { Task, Project }
 
