@@ -1,6 +1,6 @@
 /* 
-    This counter increments every time a new todo list item is created
-    which gives each item a unique identifier
+    Counters for when a new project or task is created
+    to give each one a unique identifier.
 */
 
 const counter = () => {
@@ -10,6 +10,8 @@ const counter = () => {
     }
 }
 
-let id = counter();
+let taskId = counter();
+let projectId = counter();
 
-export default id;
+
+export {taskId, projectId}
