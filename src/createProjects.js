@@ -24,6 +24,8 @@ class Project {
         this.projectName = projectName;
         this.taskArray = [];
         this.id = projectId();
+        // Makes the key of an Project's instance the same as its id
+        projectsObject[this.id] = this;
     }
 
 
@@ -31,6 +33,7 @@ class Project {
         const task = new Task(title, description, dueDate, priority);
         this.taskArray.push(task);
     }
+
 
     /* 
         A todo item on the todo-list is removed from the array by passing the id of an item element
@@ -48,5 +51,7 @@ class Project {
     }
 }
 
-export { Task, Project }
+const projectsObject = {};
+
+export { Task, Project, projectsObject }
 
