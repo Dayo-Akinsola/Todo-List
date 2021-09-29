@@ -1,6 +1,5 @@
 * {
     margin: 0;
-    padding: 0;
 }
 
 body{
@@ -95,9 +94,14 @@ body{
 .add-project-screen{
     display: none;
     position: fixed;
-    z-index: 2;
+    left: 0;
+    top: 0;
+    z-index: 1;
     width: 100%;
     height: 100%;
+    background-color: rgb(0,0,0); 
+    background-color: rgba(0,0,0,0.05);
+    padding-top: 150px;
 }
 
 #add-project-form{
@@ -297,16 +301,21 @@ body{
 .add-task-screen{
     display: none;
     position: fixed;
-    z-index: 2;
+    left: 0;
+    top: 0;
+    z-index: 1;
     width: 100%;
     height: 100%;
+    background-color: rgb(0,0,0); 
+    background-color: rgba(0,0,0,0.05);
+    padding-top: 150px;
 }
 
 #add-task-form{
     color: black;
     margin: 0 auto;
     width: 645px;
-    height: 160px;
+    height: 182.2px;
     top: 1.8rem;
     border-style: ridge;
     box-shadow: 10px 10px 10px rgba(156, 154, 154, 0.247);
@@ -326,6 +335,10 @@ body{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-right: -2px;
+    background-color: #b5b5d6;
 }
 
 #task-form-name{
@@ -348,6 +361,7 @@ body{
     height: 80px;
     resize: none;
     padding-left: 5px;
+    padding-top: 5px;
 }
 
 .priority-buttons{
@@ -412,6 +426,11 @@ body{
 #urgent:hover{
     border-color: rgb(5, 0, 0)
 }
+
+.priority-button.clicked{
+    border-color: rgb(5, 0, 0)!important;
+}
+
 
 #low:active{
     transform: scale(0.9);
