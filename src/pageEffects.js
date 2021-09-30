@@ -26,18 +26,22 @@ const displayNewTaskForm = () => {
 }
 
 const showSidebarProjectTasks = () => {
-    const sidebarProjectName = document.querySelector('.sidebar-project-name');
-    const sidebarTasksList = document.querySelector('.sidebar-tasks-collapse');
-    sidebarProjectName.addEventListener('click', () => {
-        if (Array.from(sidebarTasksList.classList).includes('hidden')){
-            sidebarTasksList.classList.remove('hidden');
-            sidebarTasksList.classList.add('shown');
-        }
+    const sidebarProjects = document.querySelectorAll('.sidebar-project');
 
-        else{
-            sidebarTasksList.classList.remove('shown');
-            sidebarTasksList.classList.add('hidden');
-        }
+    sidebarProjects.forEach(project => {
+        const sidebarProjectName = project.querySelector('.sidebar-project-name');
+        const sidebarTasksList = project.querySelector('.sidebar-tasks-collapse');
+        sidebarProjectName.addEventListener('click', () => {
+            if (Array.from(sidebarTasksList.classList).includes('hidden')){
+                sidebarTasksList.classList.remove('hidden');
+                sidebarTasksList.classList.add('shown');
+            }
+    
+            else{
+                sidebarTasksList.classList.remove('shown');
+                sidebarTasksList.classList.add('hidden');
+            }
+        }) 
     })
 }
 
@@ -51,14 +55,4 @@ const priorityButtonsChange = () => {
     })
 }
 
-// I included this function to be able to verify that a user chose a priority option.
-const priorityButtonCheck = () => {
-    const buttons = document.querySelectorAll('.priority-buttons');
-    buttons.forEach(button => {
-        if (Array.from(button.classList).includes('clicked')) return true;
-    })
-    return false;
-}
-
-
-export { displayNewProjectForm, showSidebarProjectTasks, displayNewTaskForm, priorityButtonsChange, priorityButtonCheck }
+export { displayNewProjectForm, showSidebarProjectTasks, displayNewTaskForm, priorityButtonsChange }
