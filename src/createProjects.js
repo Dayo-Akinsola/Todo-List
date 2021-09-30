@@ -1,17 +1,13 @@
 import {taskId, projectId} from './counter'
 
 class Task {
-    constructor(title, description, dueDate, priority){
+    constructor(title, notes, dueDate, priority){
         this.title = title;
-        this.description = description;
+        this.notes = notes;
         this.dueDate = dueDate;
         this.priority = priority;
         this.id = taskId();
         this.complete = false;
-    }
-
-    changePriority(){
-        this.priority = !this.priority;
     }
 
     setCompleteStatus(){
@@ -29,11 +25,15 @@ class Project {
     }
 
 
-    addTask (title, description, dueDate, priority){
-        const task = new Task(title, description, dueDate, priority);
+    addNewTask (title, notes, dueDate, priority){
+        const task = new Task(title, notes, dueDate, priority);
         this.taskArray.push(task);
     }
 
+
+    addTask (task){
+        this.taskArray.push(task);
+    }
 
     /* 
         A todo item on the todo-list is removed from the array by passing the id of an item element
