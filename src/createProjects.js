@@ -7,6 +7,7 @@ class Task {
         this.dueDate = dueDate;
         this.priority = priority;
         this.id = taskId();
+        tasksObject[this.id] = this;
         this.complete = false;
     }
 
@@ -52,6 +53,7 @@ class Project {
 }
 
 const projectsObject = {};
+const tasksObject = {};
 
-export { Task, Project, projectsObject }
+export { Task, Project, projectsObject, tasksObject }
 
