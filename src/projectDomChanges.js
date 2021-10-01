@@ -1,5 +1,5 @@
-import { Project, projectsObject } from './createProjects.js'
-import { displayNewTaskForm } from './pageEffects.js';
+import { Project, projectsObject, Task } from './createProjects.js'
+import { displayNewTaskForm, increaseSidebarHeight } from './pageEffects.js';
 
 // Function to display a created project on the main part of the page.
 const addNewProject = (project) => {
@@ -74,6 +74,7 @@ const addNewProjectListener = () => {
         addNewProjectToSidebar(newProject);
         addProjectDisplay.style.display = 'none';
         projectName.value = '';
+        increaseSidebarHeight();
     })
 
     cancel.addEventListener('click', () => {
