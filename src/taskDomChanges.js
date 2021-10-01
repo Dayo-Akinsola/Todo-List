@@ -1,6 +1,6 @@
-import { Task, projectsObject } from './createProjects.js';
+import { Task, projectsObject, tasksObject } from './createProjects.js';
 import { createTaskMainDetails, createTaskButtons, createDetailsContainer } from '../helpers/taskDomHelpers.js';
-import { increaseSidebarHeight, showDetailsListener } from './pageEffects.js';
+import { increaseSidebarHeight, showDetailsListener, displayEditTaskForm } from './pageEffects.js';
 
 /*
     The function finds the project that the user wants to add
@@ -84,6 +84,7 @@ const newTasklistener = () => {
             }
         })
         showDetailsListener();
+        displayEditTaskForm();
     })
 
     cancelButton.addEventListener('click', () => {
@@ -97,7 +98,67 @@ const newTasklistener = () => {
         })
     })
 }
+
+// Functions to handle the editing of a task
+const editTaskListener = () => {
+    const form = document.querySelector('#add-task-form');
+    const formTitle = document.querySelector('#task-form-name');
+    const formNotes = document.querySelector('#notes-form');
+    const formDate = document.querySelector('#task-form-date');
+    const cancelButton = document.querySelector('#cancel-task-button');
+    const editTaskScreen = document.querySelector('.add-task-screen');
+
+
+    form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const taskItems = document.querySelectorAll('.todo-list-item');
+        const clickedPriorityBtn = document.querySelector('.priority-button.clicked');
+
+        taskItems.forEach(task => {
+            if (Array.from(task.classList).includes('active')){
+                // Changing the task details in the dom
+                const taskName = task.querySelector('.todo-title');
+                const taskNotes = task.querySelector('#todo-notes');
+                const taskPriority = task.querySelector('#todo-priority');
+                const taskDate = task.querySelector('#todo-date');
+
+                taskName.textContent = formTitle.value;
+                taskNotes.textContent = formNotes.value;
+                taskPriority.textContent = `Priority: ${clickedPriorityBtn.id}`;
+                taskDate.textContent = `Due: ${formDate.value}`;
+
+                // Reflecting the change in the instance of the Task class
+                const taskInstance = tasksObject[task.dataset.taskid];
+                taskInstance.title = formTitle.value;
+                taskInstance.notes = formNotes.value;
+                taskInstance.dueDate = formDate.value;
+                taskInstance.priority = clickedPriorityBtn.id;
+                console.log(taskInstance);
+
+                // Reset form inputs and remove form
+                formTitle.value = ''; formNotes.value = ''; formDate.value = '';
+                task.classList.remove('active');
+                editTaskScreen.classList.remove('edit-mode');
+                editTaskScreen.style.display = 'none';
+
+            }
+        })
+    })
+
+    cancelButton.addEventListener('click', () => {
+        const taskItems = document.querySelectorAll('.todo-list-item');
+        taskItems.forEach(task => {
+            if (Array.from(task.classList).includes('active')){
+                formTitle.value = ''; formNotes.value = ''; formDate.value = '';
+                task.classList.remove('active');
+                editTaskScreen.classList.remove('edit-mode');
+                editTaskScreen.style.display = 'none';
+
+            }
+        })
+    })
+}
  
 
 
-export { newTasklistener };
+export { newTasklistener, editTaskListener };
