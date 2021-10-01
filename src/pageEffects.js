@@ -11,6 +11,7 @@ const displayNewProjectForm = () => {
 const displayNewTaskForm = () => {
     const projects = document.querySelectorAll('.project-details');
     const addTaskForm = document.querySelector('.add-task-screen');
+    const submitTaskButton = document.querySelector('#submit-task-button');
     projects.forEach(project => {
         const addTaskSymbol = project.querySelector('.add-task-symbol');
         const projectName = project.querySelector('.project-name');
@@ -20,7 +21,58 @@ const displayNewTaskForm = () => {
             project.classList.add('active');
             addTaskForm.style.display = 'block';
             taskFormName.placeholder = `Add ${projectName.textContent} task`;
+            submitTaskButton.value = 'Add Task';
         })
+    })
+}
+
+const setEditFormValues = (event) => {
+    const taskItems = document.querySelectorAll('.todo-list-item');
+
+    const editTaskForm = document.querySelector('.add-task-screen');
+    editTaskForm.classList.add('edit-mode');
+    editTaskForm.style.display = 'block';
+
+    // Default input fields for the edit form
+    const taskFormName = document.querySelector('#task-form-name');
+    const taskFormNotes = document.querySelector('#notes-form');
+    const priorityButtons = document.querySelectorAll('.priority-button');
+    const taskFormDate = document.querySelector('#task-form-date');
+    const submitTaskButton = document.querySelector('#submit-task-button');
+
+    taskItems.forEach(task => {
+        if (task.querySelector('.edit-button') === event.target){
+            const taskName = task.querySelector('.todo-title');
+            const taskNotes = task.querySelector('#todo-notes');
+            const taskPriority = task.querySelector('#todo-priority');
+            const taskDate = task.querySelector('#todo-date');
+
+            /* 
+                Sets the default input content to be the current values of the
+                task to be edited.
+            */ 
+            taskFormName.value = taskName.textContent;
+            taskFormNotes.value = taskNotes.textContent;
+            priorityButtons.forEach(button => {
+                button.classList.remove('clicked');
+                if (button.id === taskPriority.textContent.substring(10).toLowerCase()){
+                    button.classList.add('clicked');
+                }
+            })
+            taskFormDate.value = taskDate.textContent.substring(5);
+            submitTaskButton.value = 'Edit Task';
+
+            task.classList.add('active');
+        } 
+    })
+}
+
+const displayEditTaskForm = () => {
+    const editButtons = document.querySelectorAll('.edit-button');
+    
+    editButtons.forEach(button => {
+        button.removeEventListener('click', setEditFormValues);
+        button.addEventListener('click', setEditFormValues);
     })
 }
 
@@ -100,4 +152,5 @@ export {
     priorityButtonsChange, 
     increaseSidebarHeight, 
     showDetailsListener,
+    displayEditTaskForm,
 }
