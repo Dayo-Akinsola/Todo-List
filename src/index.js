@@ -1,14 +1,17 @@
 import './style.css';
 
 import { Task, Project} from './createProjects.js';
-import { displayNewProjectForm, showSidebarProjectTasks, displayNewTaskForm, priorityButtonsChange, showDetailsListener } from './pageEffects.js';
+import * as pageEffect from './pageEffects.js';
 import {addNewProjectListener} from './projectDomChanges.js';
-import { newTasklistener } from './taskDomChanges.js';
+import { newTasklistener, editTaskListener } from './taskDomChanges.js';
 
-displayNewProjectForm();
-showSidebarProjectTasks();
+pageEffect.displayNewProjectForm();
+pageEffect.showSidebarProjectTasks();
+pageEffect.displayNewTaskForm();
+pageEffect.priorityButtonsChange();
+pageEffect.showDetailsListener();
+pageEffect.displayEditTaskForm();
 addNewProjectListener();
-displayNewTaskForm();
-priorityButtonsChange();
 newTasklistener();
-showDetailsListener();
+editTaskListener();
+
