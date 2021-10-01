@@ -1,5 +1,6 @@
 import { Task, projectsObject } from './createProjects.js';
 import { createTaskMainDetails, createTaskButtons, createDetailsContainer } from '../helpers/taskDomHelpers.js';
+import { increaseSidebarHeight, showDetailsListener } from './pageEffects.js';
 
 /*
     The function finds the project that the user wants to add
@@ -14,13 +15,10 @@ const addTaskMainPage = (task, project) => {
 
     const summaryContainer = document.createElement('div');
     summaryContainer.classList.add('summary-container');
+    taskListItem.appendChild(summaryContainer);
 
     const mainDetailsContainer = createTaskMainDetails(task);
     summaryContainer.appendChild(mainDetailsContainer);
-
-    const taskDate = document.createElement('span');
-    taskDate.classList.add('todo-date'); taskDate.textContent = task.dueDate;
-    summaryContainer.appendChild(taskDate);
 
     const editTaskButtons = document.createElement('div');
     editTaskButtons.classList.add('edit-task-buttons');
@@ -28,10 +26,12 @@ const addTaskMainPage = (task, project) => {
     buttonArray.forEach(button => editTaskButtons.appendChild(button)); 
     summaryContainer.appendChild(editTaskButtons);
 
-    taskList.appendChild(summaryContainer);
-
     const detailsContainer = createDetailsContainer(task);
-    taskList.appendChild(detailsContainer);
+    taskListItem.appendChild(detailsContainer);
+
+
+    taskList.appendChild(taskListItem);
+
 }
 
 // Matches projectid from main page and sidebar so the task is added to the right project on the sidebar
@@ -55,7 +55,6 @@ const addTaskSidebar = (task, project) => {
 }
 
 const newTasklistener = () => {
-    const projects = document.querySelectorAll('.project-details');
     const form = document.querySelector('#add-task-form');
     const formTitle = document.querySelector('#task-form-name');
     const formNotes = document.querySelector('#notes-form');
@@ -65,6 +64,7 @@ const newTasklistener = () => {
 
 
     form.addEventListener('submit', (event) => {
+        const projects = document.querySelectorAll('.project-details');
         projects.forEach(project => {
             if (Array.from(project.classList).includes('active')){
                 event.preventDefault();
@@ -79,11 +79,15 @@ const newTasklistener = () => {
                 formTitle.value = ''; formNotes.value = ''; formDate.value = '';
                 addTaskScreen.style.display = 'none';
                 project.classList.remove('active');
+
+                increaseSidebarHeight();
             }
         })
+        showDetailsListener();
     })
 
     cancelButton.addEventListener('click', () => {
+        const projects = document.querySelectorAll('.project-details');
         projects.forEach(project => {
             if (Array.from(project.classList).includes('active')){
                 formTitle.value = ''; formNotes.value = ''; formDate.value = '';
