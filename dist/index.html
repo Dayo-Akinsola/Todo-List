@@ -68,18 +68,19 @@
                                     <input class="todo-check" type="radio" id="task-1" value="Task 1" />
                                     <span class="todo-title">Take out the rubbish</span>   
                                 </div>
-                                <span class="todo-date">27/09/2021</span>
                                 <div class="edit-task-buttons">  
-                                    <button type="button" class="todo-details">Details</button>     
-                                    <button type="button" class="todo-edit">Edit</button>
-                                    <button type="button" class="todo-delte">Delete</button>
+                                    <button type="button" class="details-button">Details</button>     
+                                    <button type="button" class="edit-button">Edit</button>
+                                    <button type="button" class="delete-button">Delete</button>
                                 </div>
                             </div>
-                            <div class="details-container">
-                                <p class="todo-notes">
+                            <div class="details-container hidden">
+                                <p id="todo-notes" class="details">
                                     Remember to take recycling and black bin from the the kitchen 
                                     and take it outside.
                                 </p>
+                                <span id="todo-date" class="details">Due: 27/09/2021</span>
+                                <span id="todo-priority" class="details">Priority: Low</span>
                             </div>
                         </div>
                     </div>
