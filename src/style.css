@@ -215,6 +215,7 @@ body{
     padding: 0px 10px 0px 5px;
     border-radius: 8px;
     margin: 5px 0 5px 20px;
+    overflow-wrap: anywhere;
 }
   
 .fas{
