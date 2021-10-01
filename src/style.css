@@ -60,11 +60,13 @@ body{
 
 .sidebar{
     background-color: #212529;
-    height: 100%;
+    height: 700px;
     width: 250px;
     color: white;
-    position: fixed;
+    position: absolute;
     z-index: 1;
+    overflow: auto;
+    min-height: 500px;
 }  
 
 .display-categories{
@@ -207,6 +209,13 @@ body{
     display: flex;
     flex-direction: column;
 }
+
+.todo-list-item{
+    background-color: #eef0f2;
+    padding: 0px 10px 0px 5px;
+    border-radius: 8px;
+    margin: 5px 0 5px 20px;
+}
   
 .fas{
     font-size: 24px;
@@ -218,27 +227,57 @@ body{
     justify-content: space-between;
     margin-top: 10px;
     margin-bottom: 10px;
+    align-items: center;
+}
+
+.radio-title-container{
+    display: flex;
+    align-items: center;
+}
+
+.todo-title{
+    margin-left: 6px;
 }
 
 .todos-container{
     margin-left: 426px;
     margin-top: 40px;
     width: 50%;
-}
-
-.todo-deatails{
     position: relative;
-    bottom: 10px;
 }
 
-.todo-notes{
+
+.details{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#todo-notes{
     font-size: 14px;
-    margin-left: 16px;
     color: #4d5156;
 }
 
+#todo-priority{
+    font-weight: 600;
+}
+
 .details-container{
-    display: block;
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+    color: #4d5156;
+    font-size: 14px;
+}
+
+.details-container.hidden{
+    display: none;
+}
+
+.edit-task-buttons{
+    display: flex;
+    flex-direction: row;
+    width: 183px;
+    justify-content: space-evenly;
 }
 
 .down-arrow{
