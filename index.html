@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html>     
     <head>
         <title>Todo List App</title>
     </head>
@@ -7,7 +7,6 @@
         <script defer src="main.js"></script>
         <header class="page-header">
             <h2 id="page-heading">Todo List</h2>
-            <input type="text" placeholder="Search..." id="search-bar" />
             <div class="add-project-container">
                 <span class="add-project-button">
                     <span id="addition-symbol">&#43;</span>
@@ -17,79 +16,35 @@
         </header>
         <div class="sidebar">
             <ul class="display-categories">
-                <li class="category-item">
+                <li class="category-item" id="all-item">
                     <span class="nav-link" id="all">All</span>
                 </li>
-                <li class="category-item">
+                <li class="category-item" id="today-item">
                     <span class="nav-link" id="today">Today</span>
                 </li>
-                <li class="category-item">
-                    <span class="nav-link" id="7-days">Next 7 days</span>
+                <li class="category-item" id="this-week-item">
+                    <span class="nav-link" id="this-week">This Week</span>
                 </li>
-                <li class="category-item">
+                <li class="category-item" id="urgent-item">
                     <span class="nav-link" id="urgent-sidebar">Urgent</span>
                 </li>
-                <li class="category-item">
+                <li class="category-item" id="overdue-item">
                     <span class="nav-link" id="overdue">Overdue</span>
                 </li>
             </ul>
             <hr>
             <div class="sidebar-projects">
-                <h4 id="projects-subheading">Projects</h4>
-                <ul class="sidebar-projects-list">
-                    <li class="sidebar-project">
-                        <span class="sidebar-project-name">Project 1</span>
-                        <div class="sidebar-tasks-collapse hidden">
-                            <ul class="btn-toggle show">
-                                <li class="sidebar-task-title">
-                                    <span>Take out rubbish</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </li> 
-                </ul>
+                <h4 id="projects-subheading">View By Project</h4>
+                <ul class="sidebar-projects-list"></ul>
             </div>
         </div>
         <div class="todos-container">
             <h2 id="todos-heading">All</h2>
-            <ul class="projects-list">
-                <li class="project-details" id="project-1">
-                    <div class="project-heading-container">
-                        <div class="project-heading">
-                            <span class="down-arrow">&#8615;</span>
-                            <h3 class="project-name">Project 1</h3>
-                        </div>
-                        <span class="add-task-symbol">&#43;</span>
-                    </div>
-                    <div class="todo-list-items">
-                        <div class="todo-list-item">
-                            <div class="summary-container">
-                                <div class="radio-title-container">
-                                    <input class="todo-check" type="radio" id="task-1" value="Task 1" />
-                                    <span class="todo-title">Take out the rubbish</span>   
-                                </div>
-                                <div class="edit-task-buttons">  
-                                    <button type="button" class="details-button">Details</button>     
-                                    <button type="button" class="edit-button">Edit</button>
-                                    <button type="button" class="delete-button">Delete</button>
-                                </div>
-                            </div>
-                            <div class="details-container hidden">
-                                <p id="todo-notes" class="details">
-                                    Remember to take recycling and black bin from the the kitchen 
-                                    and take it outside.
-                                </p>
-                                <span id="todo-date" class="details">Due: 27/09/2021</span>
-                                <span id="todo-priority" class="details">Priority: Low</span>
-                            </div>
-                        </div>
-                    </div>
-                </li>
-            </ul>
+            <ul class="projects-list"></ul>
         </div>
         <div class="add-project-screen">
             <form id="add-project-form">
-                <input type="text" id="project-form-name" placeholder="Project Name" required autofocus />
+                <input type="text" id="project-form-name" placeholder="Project Name" maxlength="20" required autofocus />
                 <div id="form-buttons">
                     <input type="submit" value="Add" class="form-button" id="add-project-button" />
                     <button type="button" class="form-button" id="cancel-button">Cancel</button>
@@ -99,7 +54,7 @@
         <div class="add-task-screen">
             <form id="add-task-form">
                 <div class="form-text-container">
-                    <input type="text" placeholder="Task" id="task-form-name" required autofocus />
+                    <input type="text" placeholder="Task" id="task-form-name" maxlength="40" required autofocus />
                     <textarea placeholder="Notes/Details" id="notes-form"></textarea>
                 </div>
                 <div class="form-buttons-container">
