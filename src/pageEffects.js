@@ -1,3 +1,5 @@
+import { format } from 'date-fns';
+
 // This module creates functions that dynamically change css properties 
 const displayNewProjectForm = () => {
     const addProjectButton = document.querySelector('.add-project-container');
@@ -59,7 +61,10 @@ const setEditFormValues = (event) => {
                     button.classList.add('clicked');
                 }
             })
-            taskFormDate.value = taskDate.textContent.substring(5);
+            const splitDate = taskDate.textContent.substring(5).split('/');
+            taskFormDate.value = format(new Date(splitDate[2], parseInt(splitDate[1]) - 1, splitDate[0]), 'yyyy-MM-dd');
+            console.log(splitDate);
+            console.log(taskFormDate.value);
             submitTaskButton.value = 'Edit Task';
 
             task.classList.add('active');
@@ -75,6 +80,8 @@ const displayEditTaskForm = () => {
         button.addEventListener('click', setEditFormValues);
     })
 }
+
+
 
 const showSidebarProjectTasks = () => {
     const sidebarProjects = document.querySelectorAll('.sidebar-project');
@@ -108,9 +115,11 @@ const priorityButtonsChange = () => {
 
 const increaseSidebarHeight = () => {
     const sidebar = document.querySelector('.sidebar');
-    const mainPageHeight = document.querySelector('.todos-container').clientHeight;
-
+    let mainPageHeight = document.querySelector('.todos-container').clientHeight;
+    
+    mainPageHeight += 100; 
     sidebar.style.minHeight = mainPageHeight + 50 + "px";
+
 }
 
 const showDetails = (event) => {
@@ -142,6 +151,7 @@ const showDetailsListener = () => {
         button.addEventListener('click', showDetails)
     })
 }
+
 
 
 
