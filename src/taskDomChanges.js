@@ -1,6 +1,8 @@
 import { Task, projectsObject, tasksObject } from './createProjects.js';
 import { createTaskMainDetails, createTaskButtons, createDetailsContainer } from '../helpers/taskDomHelpers.js';
 import { increaseSidebarHeight, showDetailsListener, displayEditTaskForm } from './pageEffects.js';
+import { populateStorage } from './displayControl.js';
+
 
 /*
     The function finds the project that the user wants to add
@@ -34,22 +36,14 @@ const addTaskMainPage = (task, project) => {
 
 }
 
-// Matches projectid from main page and sidebar so the task is added to the right project on the sidebar
-const addTaskSidebar = (task, project) => {
+// Matches project id in the sidebar with the project id stored in the projectsObject to update tally
+const updateTaskTally = (projectInstance) => {
     const sidebarProjects = document.querySelectorAll('.sidebar-project');
     
     sidebarProjects.forEach(sidebarProject => {
-        if (sidebarProject.dataset.projectid === project.dataset.projectid){
-            const projectTasks = sidebarProject.querySelector('.btn-toggle.show');
-            
-            const taskTitle = document.createElement('li');
-            const sidebarTask = document.createElement('span');
-            taskTitle.classList.add('sidebar-task-title'); 
-            sidebarTask.classList.add('sidebar-task'); sidebarTask.textContent = task.title;
-            taskTitle.appendChild(sidebarTask);
-
-            projectTasks.appendChild(taskTitle);
-
+        if (sidebarProject.dataset.projectid === projectInstance.id){
+            const taskTally = sidebarProject.querySelector('.task-tally');
+            taskTally.textContent = projectInstance.taskArray.length;               
         }
     })
 }
@@ -70,10 +64,11 @@ const newTasklistener = () => {
                 event.preventDefault();
                 const projectInstance = projectsObject[project.dataset.projectid];
                 const priority = document.querySelector('.priority-button.clicked');
-                const task = new Task(formTitle.value, formNotes.value, formDate.value, priority.id)
+                const task = new Task(formTitle.value, formNotes.value, formDate.value, priority.id);
+                task.formatDate();
                 projectInstance.addTask(task);
                 addTaskMainPage(task, project);
-                addTaskSidebar(task, project);
+                updateTaskTally(projectInstance);
         
                 // reset form form after submitting
                 formTitle.value = ''; formNotes.value = ''; formDate.value = '';
@@ -85,6 +80,8 @@ const newTasklistener = () => {
         })
         showDetailsListener();
         displayEditTaskForm();
+        deleteTaskListener();
+        populateStorage();
     })
 
     cancelButton.addEventListener('click', () => {
@@ -99,7 +96,7 @@ const newTasklistener = () => {
     })
 }
 
-// Functions to handle the editing of a task
+// Function to handle the editing of a task
 const editTaskListener = () => {
     const form = document.querySelector('#add-task-form');
     const formTitle = document.querySelector('#task-form-name');
@@ -122,27 +119,39 @@ const editTaskListener = () => {
                 const taskPriority = task.querySelector('#todo-priority');
                 const taskDate = task.querySelector('#todo-date');
 
-                taskName.textContent = formTitle.value;
-                taskNotes.textContent = formNotes.value;
-                taskPriority.textContent = `Priority: ${clickedPriorityBtn.id}`;
-                taskDate.textContent = `Due: ${formDate.value}`;
-
                 // Reflecting the change in the instance of the Task class
                 const taskInstance = tasksObject[task.dataset.taskid];
                 taskInstance.title = formTitle.value;
                 taskInstance.notes = formNotes.value;
                 taskInstance.dueDate = formDate.value;
+                taskInstance.formatDate();
                 taskInstance.priority = clickedPriorityBtn.id;
-                console.log(taskInstance);
+
+                taskName.textContent = taskInstance.title;
+                taskNotes.textContent = taskInstance.notes;
+                taskPriority.textContent = `Priority: ${taskInstance.priority}`;
+                taskDate.textContent = `Due: ${taskInstance.dueDate}`;
+
+                // Stores the new task details in taskObject so they can be replaced in local storage
+                const projectNode = task.parentNode.parentNode;
+                const projectObject = projectsObject[projectNode.dataset.projectid];
+                projectObject.taskArray.forEach(taskObject => {
+                    if (taskObject.id === task.dataset.taskid){
+                        taskObject.title = taskInstance.title;
+                        taskObject.notes = taskInstance.notes;
+                        taskObject.dueDate = taskInstance.dueDate;
+                        taskObject.priority = taskInstance.priority;
+                    }
+                })
 
                 // Reset form inputs and remove form
                 formTitle.value = ''; formNotes.value = ''; formDate.value = '';
                 task.classList.remove('active');
                 editTaskScreen.classList.remove('edit-mode');
                 editTaskScreen.style.display = 'none';
-
             }
         })
+        populateStorage();
     })
 
     cancelButton.addEventListener('click', () => {
@@ -158,7 +167,48 @@ const editTaskListener = () => {
         })
     })
 }
+
+const deleteTask = (event) => {
+    const taskItems = document.querySelectorAll('.todo-list-item');
+
+    taskItems.forEach(task => {
+        /*
+            The delted to task is removed from the DOM and all 
+            references to its class instance is also removed.
+        */
+        if (task.querySelector('.delete-button') === event.target){
+            tasksObject[task.dataset.taskid] = null;
+            
+            delete tasksObject[task.dataset.taskid];
+            for (const project in projectsObject){
+                projectsObject[project].taskArray.forEach(projectTask => {
+                    if (projectTask.id === task.dataset.taskid){
+                        projectsObject[project].removeTask(projectTask.id);
+                        task.remove();
+                        updateTaskTally(projectsObject[project]);
+                    }
+                })
+            }
+        }
+    })
+    populateStorage();
+}
+
+const deleteTaskListener = () => {
+    const deleteButtons = document.querySelectorAll('.delete-button');
+
+    deleteButtons.forEach(button => {
+        button.removeEventListener('click', deleteTask);
+        button.addEventListener('click', deleteTask);
+    })
+}
  
 
 
-export { newTasklistener, editTaskListener };
+export { 
+    newTasklistener, 
+    editTaskListener, 
+    deleteTaskListener, 
+    addTaskMainPage, 
+    updateTaskTally 
+};
