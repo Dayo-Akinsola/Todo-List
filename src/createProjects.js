@@ -12,10 +12,6 @@ class Task {
         this.complete = false;
     }
 
-    setCompleteStatus(){
-        this.complete = !this.complete;
-    }
-
     deleteTaskInstance(){
         tasksObject[this.id] = null;
         delete tasksObject[this.id];
@@ -56,7 +52,7 @@ class Project {
     /* 
         A todo item on the todo-list is removed from the array by passing the id of an item element
         removed from the DOM and matching it with the same item in the array.
-        @id int representing Task instance id.
+        @id represents Task instance id.
     */
     removeTask(id){
         if (this.taskArray.length !== 0){
