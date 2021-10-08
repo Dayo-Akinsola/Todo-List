@@ -9,16 +9,25 @@ const displayNewProjectForm = () => {
     })
 }
 
+const resetPriorityButton = () => {
+    const priorityButtons = document.querySelectorAll('.priority-button');
+    priorityButtons.forEach(button => button.classList.remove('clicked'));
+    const normalPriorityButton = document.querySelector('#normal');
+    normalPriorityButton.classList.add('clicked');
+}
+
 // Displays new task from for the specific project that was clicked 
 const displayNewTaskForm = () => {
     const projects = document.querySelectorAll('.project-details');
     const addTaskForm = document.querySelector('.add-task-screen');
     const submitTaskButton = document.querySelector('#submit-task-button');
+
     projects.forEach(project => {
         const addTaskSymbol = project.querySelector('.add-task-symbol');
         const projectName = project.querySelector('.project-name');
         const taskFormName = document.querySelector('#task-form-name');
         addTaskSymbol.addEventListener('click', () => {
+            resetPriorityButton();
             // Active class used to identify the project that has been clicked
             project.classList.add('active');
             addTaskForm.style.display = 'block';
@@ -63,8 +72,6 @@ const setEditFormValues = (event) => {
             })
             const splitDate = taskDate.textContent.substring(5).split('/');
             taskFormDate.value = format(new Date(splitDate[2], parseInt(splitDate[1]) - 1, splitDate[0]), 'yyyy-MM-dd');
-            console.log(splitDate);
-            console.log(taskFormDate.value);
             submitTaskButton.value = 'Edit Task';
 
             task.classList.add('active');
@@ -78,28 +85,6 @@ const displayEditTaskForm = () => {
     editButtons.forEach(button => {
         button.removeEventListener('click', setEditFormValues);
         button.addEventListener('click', setEditFormValues);
-    })
-}
-
-
-
-const showSidebarProjectTasks = () => {
-    const sidebarProjects = document.querySelectorAll('.sidebar-project');
-
-    sidebarProjects.forEach(project => {
-        const sidebarProjectName = project.querySelector('.sidebar-project-name');
-        const sidebarTasksList = project.querySelector('.sidebar-tasks-collapse');
-        sidebarProjectName.addEventListener('click', () => {
-            if (Array.from(sidebarTasksList.classList).includes('hidden')){
-                sidebarTasksList.classList.remove('hidden');
-                sidebarTasksList.classList.add('shown');
-            }
-    
-            else{
-                sidebarTasksList.classList.remove('shown');
-                sidebarTasksList.classList.add('hidden');
-            }
-        }) 
     })
 }
 
@@ -157,7 +142,6 @@ const showDetailsListener = () => {
 
 export { 
     displayNewProjectForm, 
-    showSidebarProjectTasks, 
     displayNewTaskForm, 
     priorityButtonsChange, 
     increaseSidebarHeight, 
