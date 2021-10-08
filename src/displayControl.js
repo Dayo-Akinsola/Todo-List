@@ -27,13 +27,11 @@ const loadStorage = () => {
 
             const projects = document.querySelectorAll('.project-details');
             const lastProject = projects[projects.length - 1];
-            if (projectsStorage[key].taskArray.length !== 0){
-                projectsStorage[key].taskArray.forEach(task => {
-                    restoreTaskMethods(task, tasksStorage, projectsStorage, key);                    
-                    loadTasks(tasksStorage, task, lastProject);
-                    updateTaskTally(projectsStorage[key]);
-                })
-            }
+            projectsStorage[key].taskArray.forEach(task => {
+                restoreTaskMethods(task, tasksStorage, projectsStorage, key);                    
+                loadTasks(tasksStorage, task, lastProject);
+                updateTaskTally(projectsStorage[key]);
+            })
         }
         projectsObject = projectsStorage;
         tasksObject = tasksStorage;
@@ -212,21 +210,25 @@ const displayProjectTasksOnly = (sidebarProject) => {
                 
                 // Because of the unique id only one project will render
                 const project = document.querySelector('.project-details');
-                projectsStorage[key].taskArray.forEach(task => {
-                    loadTasks(tasksStorage, task, project);
-
-                })
+                
+                if (projectsStorage[key].taskArray.length > 0){
+                    projectsStorage[key].taskArray.forEach(task => {
+                        restoreTaskMethods(task, tasksStorage, projectsStorage, key);                    
+                        loadTasks(tasksStorage, task, project);
+                    })
+                }
             }
-            restoreTaskMethods(task, tasksStorage, projectsStorage, key);                    
             addNewProjectToSidebar(projectsStorage[key]);
             updateTaskTally(projectsStorage[key]);
         }
         projectsObject = projectsStorage;
         tasksObject = tasksStorage;
         restoreListeners();
-        displayProjectTasksListener();
+        displayProjectTasksListener();      
     }
+
 }
+
 
 const displayProjectTasksListener = () => {
     const sidebarProjectLinks = document.querySelectorAll('.sidebar-project');
