@@ -1,5 +1,5 @@
 import { displayEditTaskForm, showDetailsListener } from '../src/pageEffects.js';
-import { addTaskMainPage, deleteTaskListener } from '../src/taskDomChanges.js';
+import { addTaskMainPage, deleteTaskListener, changeTaskCompleteStatus } from '../src/taskDomChanges.js';
 import { addNewProject, addNewProjectToSidebar } from '../src/projectDomChanges.js';
 import { Task, Project } from '../src/createProjects.js';
 
@@ -20,7 +20,6 @@ const dateNow = () => {
     independentaly in the tasks object and within the array of tasks attached
     to each project.
 */
-
 const restoreTaskMethods = (task, tasksStorage, projectsStorage, key) => {
     const taskIndex = projectsStorage[key].taskArray.indexOf(task);
     tasksStorage[task.id] = Object.assign(new Task(''), tasksStorage[task.id]);
@@ -28,8 +27,23 @@ const restoreTaskMethods = (task, tasksStorage, projectsStorage, key) => {
     projectsStorage[key].taskArray[taskIndex] = Object.assign(new Task(''), 
                                                 projectsStorage[key].taskArray[taskIndex]);
 }
-const loadTasks = (tasksStorage, task, project) => {
-    addTaskMainPage(tasksStorage[task.id], project);
+
+const loadTasks = (tasksStorage, taskInstance, project) => {
+    addTaskMainPage(tasksStorage[taskInstance.id], project);
+
+    const taskElement = document.querySelector(`[data-taskid="${taskInstance.id}"]`);
+    const taskCheckbox = taskElement.querySelector('input[type="checkbox"]');
+    const taskTitle = taskElement.querySelector('.todo-title');
+    if (tasksStorage[taskInstance.id].complete){
+        taskCheckbox.checked = true;
+        taskElement.classList.add('checked');
+        taskTitle.classList.add('checked');
+    }
+    else{
+        taskCheckbox.checked = false;
+        taskElement.classList.remove('checked');
+        taskTitle.classList.remove('checked');       
+    }
 }
 
 const loadProject = (projectsStorage, key) => {
@@ -54,6 +68,7 @@ const restoreListeners = () => {
     displayEditTaskForm();
     deleteTaskListener();
     showDetailsListener();
+    changeTaskCompleteStatus();
 }
 
 export {
