@@ -128,15 +128,4 @@ const deleteProjectListener = () => {
     })
 }
 
-if (!localStorage.getItem('projectsObject')){
-    const algorithms = new Project('Algorithms');
-    addNewProject(algorithms);
-    addNewProjectToSidebar(algorithms);
-
-    const exercise = new Project('Exercise');
-    addNewProject(exercise);
-    addNewProjectToSidebar(exercise);
-
-}
-
 export { addNewProjectListener, deleteProjectListener, addNewProject, addNewProjectToSidebar }
