@@ -1,5 +1,5 @@
 import { Task, projectsObject, tasksObject } from './createProjects.js';
-import { createTaskMainDetails, createTaskButtons, createDetailsContainer } from '../helpers/taskDomHelpers.js';
+import { createTaskMainDetails, createTaskButtons, createDetailsContainer, controlPriorityColor } from '../helpers/taskDomHelpers.js';
 import { increaseSidebarHeight, showDetailsListener, displayEditTaskForm } from './pageEffects.js';
 import { populateStorage } from './displayControl.js';
 
@@ -48,6 +48,30 @@ const updateTaskTally = (projectInstance) => {
     })
 }
 
+/**
+ * Created this function to separate the logic of creating a new task and submitting
+ * a new task form. 
+ * Returns Task class instance object created
+ * @param {string} title - Task Title
+ * @param {string} notes - Task Notes/Details
+ * @param {string} date - Task Date
+ * @param {string} priority - Task priority (low, normal, urgent)
+ * @param {HTMLElement} project - The <li> element of the project that the task will belong to.
+ */
+const createNewTask = (title, notes, date, priority, project) => {
+
+    const projectInstance = projectsObject[project.dataset.projectid];
+    const task = new Task(title, notes, date, priority);
+    task.formatDate();
+    projectInstance.addTask(task);
+    addTaskMainPage(task, project);
+    updateTaskTally(projectInstance);
+
+    return task;
+}
+
+
+
 const newTasklistener = () => {
     const form = document.querySelector('#add-task-form');
     const formTitle = document.querySelector('#task-form-name');
@@ -56,21 +80,16 @@ const newTasklistener = () => {
     const cancelButton = document.querySelector('#cancel-task-button');
     const addTaskScreen = document.querySelector('.add-task-screen');
 
-
     form.addEventListener('submit', (event) => {
         const projects = document.querySelectorAll('.project-details');
         projects.forEach(project => {
             if (Array.from(project.classList).includes('active')){
                 event.preventDefault();
-                const projectInstance = projectsObject[project.dataset.projectid];
+
                 const priority = document.querySelector('.priority-button.clicked');
-                const task = new Task(formTitle.value, formNotes.value, formDate.value, priority.id);
-                task.formatDate();
-                projectInstance.addTask(task);
-                addTaskMainPage(task, project);
-                updateTaskTally(projectInstance);
-        
-                // reset form form after submitting
+                createNewTask(formTitle.value, formNotes.value, formDate.value, priority.id, project);
+                
+                // Resets the form
                 formTitle.value = ''; formNotes.value = ''; formDate.value = '';
                 addTaskScreen.style.display = 'none';
                 project.classList.remove('active');
@@ -81,6 +100,7 @@ const newTasklistener = () => {
         showDetailsListener();
         displayEditTaskForm();
         deleteTaskListener();
+        changeTaskCompleteStatus();
         populateStorage();
     })
 
@@ -118,6 +138,7 @@ const editTaskListener = () => {
                 const taskNotes = task.querySelector('#todo-notes');
                 const taskPriority = task.querySelector('#todo-priority');
                 const taskDate = task.querySelector('#todo-date');
+                const taskCheck = task.querySelector('.todo-check');
 
                 // Reflecting the change in the instance of the Task class
                 const taskInstance = tasksObject[task.dataset.taskid];
@@ -130,7 +151,10 @@ const editTaskListener = () => {
                 taskName.textContent = taskInstance.title;
                 taskNotes.textContent = taskInstance.notes;
                 taskPriority.textContent = `Priority: ${taskInstance.priority}`;
+                taskPriority.style.color = controlPriorityColor(taskInstance.priority);
+                taskCheck.style.borderColor = controlPriorityColor(taskInstance.priority);
                 taskDate.textContent = `Due: ${taskInstance.dueDate}`;
+
 
                 // Stores the new task details in taskObject so they can be replaced in local storage
                 const projectNode = task.parentNode.parentNode;
@@ -202,6 +226,28 @@ const deleteTaskListener = () => {
         button.addEventListener('click', deleteTask);
     })
 }
+
+const changeTaskCompleteStatus = () => {
+    const taskItems = document.querySelectorAll('.todo-list-item');
+
+    taskItems.forEach(task => {
+        const taskCheckbox = task.querySelector('input[type="checkbox"]');
+        taskCheckbox.addEventListener('change', () => {
+            const taskTitle = task.querySelector('.todo-title');
+            if (!taskCheckbox.checked){
+                tasksObject[task.dataset.taskid].complete = false;
+                taskTitle.classList.remove('checked');
+                task.classList.remove('checked');
+            }
+            else{
+                tasksObject[task.dataset.taskid].complete = true;
+                taskTitle.classList.add('checked');
+                task.classList.add('checked');
+            }
+            populateStorage();
+        })
+    })
+} 
  
 
 
@@ -210,5 +256,7 @@ export {
     editTaskListener, 
     deleteTaskListener, 
     addTaskMainPage, 
-    updateTaskTally 
+    updateTaskTally,
+    createNewTask,
+    changeTaskCompleteStatus,
 };
