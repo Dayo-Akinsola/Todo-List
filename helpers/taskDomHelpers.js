@@ -1,11 +1,30 @@
+const controlPriorityColor = (priority) => {
+
+    if (priority === 'low') return 'rgb(110 194 68)';
+    else if (priority === 'normal') return '#f1bb4e';
+    else return '#f14e4e';
+
+}
 const createTaskMainDetails = (task) => {
     const mainDetailsContainer = document.createElement('div');
     mainDetailsContainer.classList.add('radio-title-container');
-    const taskRadio = document.createElement('input');
-    taskRadio.classList.add('todo-check'); taskRadio.type = 'radio';
+
+    const checkboxContainer = document.createElement('label');
+    checkboxContainer.classList.add('checkbox-container');
+
+    const defaultCheck = document.createElement('input');
+    defaultCheck.type = 'checkbox';
+
+    const customCheck = document.createElement('span');
+    customCheck.classList.add('todo-check');
+
+    customCheck.style.borderColor = controlPriorityColor(task.priority);
+
+    checkboxContainer.appendChild(defaultCheck); checkboxContainer.appendChild(customCheck);
+
     const taskTitle = document.createElement('span');
     taskTitle.classList.add('todo-title'); taskTitle.textContent = task.title;
-    mainDetailsContainer.appendChild(taskRadio); mainDetailsContainer.appendChild(taskTitle);
+    mainDetailsContainer.appendChild(checkboxContainer); mainDetailsContainer.appendChild(taskTitle);
 
     return mainDetailsContainer;
 }
@@ -41,12 +60,12 @@ const createDetailsContainer = (task) => {
     const taskPriority = document.createElement('span');
     taskPriority.id = 'todo-priority'; taskPriority.classList.add('details');
     taskPriority.textContent = 'Priority: ' + task.priority;
-    if (task.priority === 'low') taskPriority.style.color = '#84f14e';
-    else if (task.priority === 'normal') taskPriority.style.color = '#f1bb4e';
-    else taskPriority.style.color = '#f14e4e';
+
+    taskPriority.style.color = controlPriorityColor(task.priority);
+
     detailsContainer.appendChild(taskPriority);
 
     return detailsContainer;
 }
 
-export {createTaskMainDetails, createTaskButtons, createDetailsContainer}
+export {createTaskMainDetails, createTaskButtons, createDetailsContainer, controlPriorityColor}
