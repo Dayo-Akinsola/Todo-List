@@ -1,6 +1,6 @@
 import { Project, projectsObject, tasksObject } from './createProjects.js';
 import { updateTaskTally } from './taskDomChanges.js';
-import { increaseSidebarHeight } from './pageEffects.js';
+import { increaseSidebarHeight, toggleFinishedPage } from './pageEffects.js';
 import { addNewProject, addNewProjectToSidebar } from './projectDomChanges.js';
 import { isThisWeek, isAfter, add } from 'date-fns';
 import { dateNow, loadTasks, hideProjects, restoreListeners, resetDisplay, loadProject, restoreTaskMethods } from '../helpers/displayControlHelpers.js';
@@ -18,15 +18,24 @@ const loadStorage = () => {
     }
     else{
         resetDisplay();
+        document.querySelector('.sidebar-projects-list').textContent = '';
+
+        const pageHeading = document.querySelector('#todos-heading');
+        pageHeading.textContent = 'All'
+
+        const allSidebarLink = document.querySelector('#all-item');
+        allSidebarLink.classList.add('active');
 
         const projectsStorage = JSON.parse(localStorage.getItem('projectsObject'));
         const tasksStorage = JSON.parse(localStorage.getItem('tasksObject'));
-        for (const key in projectsStorage){
+
+        // Defined element here first so it's value at the end of the loop can be used outside the loop's scope
+        let projectElements;
+        for (const key in projectsStorage){ 
             loadProject(projectsStorage, key);
-
-
-            const projects = document.querySelectorAll('.project-details');
-            const lastProject = projects[projects.length - 1];
+            addNewProjectToSidebar(projectsStorage[key]);   
+            projectElements = document.querySelectorAll('.project-details');
+            const lastProject = projectElements[projectElements.length - 1];
             projectsStorage[key].taskArray.forEach(task => {
                 restoreTaskMethods(task, tasksStorage, projectsStorage, key);                    
                 loadTasks(tasksStorage, task, lastProject);
@@ -35,6 +44,7 @@ const loadStorage = () => {
         }
         projectsObject = projectsStorage;
         tasksObject = tasksStorage;
+        toggleFinishedPage(projectElements);
         increaseSidebarHeight();
         restoreListeners();
         displayProjectTasksListener();
@@ -47,8 +57,8 @@ const displayAllTasks = () => {
 
     allSidebarLink.addEventListener('click', () => {
         if (pageHeading.textContent !== 'All'){
-            pageHeading.textContent = 'All'
             loadStorage();
+            pageHeading.textContent = 'All'
         }
     })
 }
@@ -63,12 +73,14 @@ const todayTaskFilter = () => {
         if (pageHeading.textContent !== 'Today'){
             pageHeading.textContent = 'Today';
             resetDisplay();
-        
+            todaySidebarLink.classList.add('active');
+
+            let projectElements;
             for (const key in projectsStorage){
                 loadProject(projectsStorage, key);
 
-                const projects = document.querySelectorAll('.project-details');
-                const lastProject = projects[projects.length - 1];
+                projectElements = document.querySelectorAll('.project-details');
+                const lastProject = projectElements[projectElements.length - 1];
                 projectsStorage[key].taskArray.forEach(task => {
                     restoreTaskMethods(task, tasksStorage, projectsStorage, key);                    
                     if (tasksStorage[task.id].dueDate === dateNow()){
@@ -76,8 +88,9 @@ const todayTaskFilter = () => {
                     }
                     updateTaskTally(projectsStorage[key]);
                 })
-                hideProjects(projects);
             }
+            hideProjects(projectElements);
+            toggleFinishedPage(projectElements);
             projectsObject = projectsStorage;
             tasksObject = tasksStorage;
             restoreListeners();
@@ -96,12 +109,14 @@ const thisWeekTaskFilter = () => {
         if (pageHeading.textContent !== 'This Week'){
             pageHeading.textContent = 'This Week';
             resetDisplay();
-
+            weekSidebarLink.classList.add('active');
+            
+            let projectElements;
             for (const key in projectsStorage){
                 loadProject(projectsStorage, key);
 
-                const projects = document.querySelectorAll('.project-details');
-                const lastProject = projects[projects.length - 1];
+                projectElements = document.querySelectorAll('.project-details');
+                const lastProject = projectElements[projectElements.length - 1];
                 projectsStorage[key].taskArray.forEach(task => {
                     const splitDate = task.dueDate.split('/');
                     restoreTaskMethods(task, tasksStorage, projectsStorage, key);                    
@@ -110,8 +125,9 @@ const thisWeekTaskFilter = () => {
                     }
                     updateTaskTally(projectsStorage[key]);
                 })
-                hideProjects(projects)
             }
+            hideProjects(projectElements);
+            toggleFinishedPage(projectElements);
             projectsObject = projectsStorage;
             tasksObject = tasksStorage;
             restoreListeners();
@@ -121,22 +137,22 @@ const thisWeekTaskFilter = () => {
 }
 
 const urgentTaskFilter = () => {
-    const weekSidebarLink = document.querySelector('#urgent-item');
+    const urgentSidebarLink = document.querySelector('#urgent-item');
     const pageHeading = document.querySelector('#todos-heading');
 
-    weekSidebarLink.addEventListener('click',  () => {
+    urgentSidebarLink.addEventListener('click',  () => {
         const projectsStorage = JSON.parse(localStorage.getItem('projectsObject'));
         const tasksStorage = JSON.parse(localStorage.getItem('tasksObject'));
         if (pageHeading.textContent !== 'Urgent'){
             pageHeading.textContent = 'Urgent';
             resetDisplay();
+            urgentSidebarLink.classList.add('active');
 
+            let projectElements;
             for (const key in projectsStorage){
                 loadProject(projectsStorage, key);
-
-
-                const projects = document.querySelectorAll('.project-details');
-                const lastProject = projects[projects.length - 1];
+                projectElements = document.querySelectorAll('.project-details');
+                const lastProject = projectElements[projectElements.length - 1];
                 projectsStorage[key].taskArray.forEach(task => {
                     restoreTaskMethods(task, tasksStorage, projectsStorage, key);                    
                     if (task.priority === 'urgent'){
@@ -144,8 +160,9 @@ const urgentTaskFilter = () => {
                     }
                     updateTaskTally(projectsStorage[key]);
                 })
-                hideProjects(projects)
             }
+            hideProjects(projectElements);
+            toggleFinishedPage(projectElements);
             projectsObject = projectsStorage;
             tasksObject = tasksStorage;
             restoreListeners();
@@ -156,22 +173,23 @@ const urgentTaskFilter = () => {
 
 
 const overdueTaskFilter = () => {
-    const weekSidebarLink = document.querySelector('#overdue-item');
+    const overdueSidebarLink = document.querySelector('#overdue-item');
     const pageHeading = document.querySelector('#todos-heading');
 
-    weekSidebarLink.addEventListener('click',  () => {
+    overdueSidebarLink.addEventListener('click',  () => {
         const projectsStorage = JSON.parse(localStorage.getItem('projectsObject'));
         const tasksStorage = JSON.parse(localStorage.getItem('tasksObject'));
         if (pageHeading.textContent !== 'Overdue'){
             pageHeading.textContent = 'Overdue';
             resetDisplay();
+            overdueSidebarLink.classList.add('active');
 
+            let projectElements;
             for (const key in projectsStorage){
 
                 loadProject(projectsStorage, key);
-
-                const projects = document.querySelectorAll('.project-details');
-                const lastProject = projects[projects.length - 1];
+                projectElements = document.querySelectorAll('.project-details');
+                const lastProject = projectElements[projectElements.length - 1];
                 projectsStorage[key].taskArray.forEach(task => {
                     const splitDate = task.dueDate.split('/');
                     
@@ -184,8 +202,9 @@ const overdueTaskFilter = () => {
                     }
                     updateTaskTally(projectsStorage[key]);
                 })
-                hideProjects(projects)
             }
+            hideProjects(projectElements)
+            toggleFinishedPage(projectElements);
             projectsObject = projectsStorage;
             tasksObject = tasksStorage;
             restoreListeners();
@@ -197,17 +216,18 @@ const overdueTaskFilter = () => {
 const displayProjectTasksOnly = (sidebarProject) => {
     const pageHeading = document.querySelector('#todos-heading');
     const sidebarProjectName = sidebarProject.querySelector('.sidebar-project-name');
-    if (pageHeading.textContent !== sidebarProjectName.textContent){
-        pageHeading.textContent = sidebarProjectName.textContent;
+    if (!Array.from(sidebarProject.classList).includes('active')){
+        pageHeading.textContent = '';
         resetDisplay();
-
+        sidebarProject.classList.add('active');  
+        
         const projectsStorage = JSON.parse(localStorage.getItem('projectsObject'));
         const tasksStorage = JSON.parse(localStorage.getItem('tasksObject'));
         for (const key in projectsStorage){
             if (sidebarProject.dataset.projectid === projectsStorage[key].id){
                 projectsStorage[key] = Object.assign(new Project(''), projectsStorage[key]);
-                addNewProject(projectsStorage[key]);                
-                
+                addNewProject(projectsStorage[key]); 
+
                 // Because of the unique id only one project will render
                 const project = document.querySelector('.project-details');
                 
@@ -218,13 +238,14 @@ const displayProjectTasksOnly = (sidebarProject) => {
                     })
                 }
             }
-            addNewProjectToSidebar(projectsStorage[key]);
             updateTaskTally(projectsStorage[key]);
         }
         projectsObject = projectsStorage;
         tasksObject = tasksStorage;
         restoreListeners();
-        displayProjectTasksListener();      
+        displayProjectTasksListener();  
+        const allProjectsCompletePage = document.querySelector('.projects-complete-container');
+        allProjectsCompletePage.style.display = 'none';
     }
 
 }
@@ -249,5 +270,6 @@ export {
     thisWeekTaskFilter, 
     urgentTaskFilter,
     overdueTaskFilter,
-    displayProjectTasksListener, 
+    displayProjectTasksListener,
+    displayProjectTasksOnly, 
 };  
