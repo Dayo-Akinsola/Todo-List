@@ -1,6 +1,6 @@
 import { displayEditTaskForm, showDetailsListener } from '../src/pageEffects.js';
 import { addTaskMainPage, deleteTaskListener, changeTaskCompleteStatus } from '../src/taskDomChanges.js';
-import { addNewProject, addNewProjectToSidebar } from '../src/projectDomChanges.js';
+import { addNewProject } from '../src/projectDomChanges.js';
 import { Task, Project } from '../src/createProjects.js';
 
 
@@ -49,7 +49,6 @@ const loadTasks = (tasksStorage, taskInstance, project) => {
 const loadProject = (projectsStorage, key) => {
     projectsStorage[key] = Object.assign(new Project(''), projectsStorage[key]);
     addNewProject(projectsStorage[key]);
-    addNewProjectToSidebar(projectsStorage[key]);
 }
 
 // Hides project if it has no tasks to display when filtered
@@ -60,8 +59,9 @@ const hideProjects = (projects) => {
 }
 
 const resetDisplay = () => {
+    const sidebarItems = document.querySelectorAll('.sidebar-item');
+    sidebarItems.forEach(item => item.classList.remove('active'));
     document.querySelector('.projects-list').textContent = '';
-    document.querySelector('.sidebar-projects-list').textContent = '';
 }
 
 const restoreListeners = () => {
