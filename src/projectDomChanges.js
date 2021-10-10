@@ -1,13 +1,14 @@
 import { Project, projectsObject } from './createProjects.js'
 import { displayNewTaskForm, increaseSidebarHeight } from './pageEffects.js';
-import { populateStorage, displayProjectTasksListener } from './displayControl.js';
+import { displayProjectTasksListener, displayProjectTasksOnly, loadStorage } from './displayControl.js';
+import { populateStorage } from '../helpers/displayControlHelpers.js';
 
 // Function to display a created project on the main part of the page.
-const addNewProject = (project) => {
+const addNewProject = (projectInstance) => {
     const projectsList = document.querySelector('.projects-list');
     const projectElement = document.createElement('li');
     projectElement.classList.add('project-details');
-    projectElement.setAttribute('data-projectId', project.id);
+    projectElement.setAttribute('data-projectId', projectInstance.id);
 
     const projectHeadingContainer = document.createElement('div');
     projectHeadingContainer.classList.add('project-heading-container');
@@ -15,11 +16,8 @@ const addNewProject = (project) => {
     const projectHeading = document.createElement('div'); 
     projectHeading.classList.add('project-heading');
 
-    const downArrow = document.createElement('span');
-    downArrow.classList.add('down-arrow'); downArrow.innerHTML = '&#8615;';
-
     const projectName = document.createElement('h3');
-    projectName.classList.add('project-name'); projectName.textContent = project.projectName;
+    projectName.classList.add('project-name'); projectName.textContent = projectInstance.projectName;
 
     const addTaskSymbol = document.createElement('span');
     addTaskSymbol.classList.add('add-task-symbol'); addTaskSymbol.innerHTML = '&#43;';
@@ -29,34 +27,36 @@ const addNewProject = (project) => {
     symbolContainer.classList.add('symbol-container');
     symbolContainer.appendChild(addTaskSymbol); symbolContainer.appendChild(deleteProjectSymbol);
 
-
     const taskList = document.createElement('div');
     taskList.classList.add('todo-list-items');
 
-    projectHeading.appendChild(downArrow); projectHeading.appendChild(projectName);
+    projectHeading.appendChild(projectName);
     projectHeadingContainer.appendChild(projectHeading);
     projectHeadingContainer.appendChild(symbolContainer);
+    
 
     projectElement.appendChild(projectHeadingContainer);
     projectElement.appendChild(taskList);  
     projectsList.appendChild(projectElement); 
 
+
     // Function included to attach click event to new project to display task form.
     displayNewTaskForm();
 
     deleteProjectListener();
+
 }
 
-const addNewProjectToSidebar = (project) => {
+const addNewProjectToSidebar = (projectInstance) => {
     const projectsList = document.querySelector('.sidebar-projects-list');
 
     const sidebarProject = document.createElement('li');
-    sidebarProject.classList.add('sidebar-project');
-    sidebarProject.setAttribute('data-projectId', project.id);
+    sidebarProject.classList.add('sidebar-item', 'sidebar-project');
+    sidebarProject.setAttribute('data-projectId', projectInstance.id);
 
     const sidebarProjectName = document.createElement('span');
     sidebarProjectName.classList.add('sidebar-project-name');
-    sidebarProjectName.textContent = project.projectName;
+    sidebarProjectName.textContent = projectInstance.projectName;
 
     const taskTally = document.createElement('span');
     taskTally.classList.add('task-tally');
@@ -66,6 +66,8 @@ const addNewProjectToSidebar = (project) => {
     sidebarProject.appendChild(sidebarProjectName);
     sidebarProject.appendChild(taskTally);
     projectsList.appendChild(sidebarProject);
+
+    return sidebarProject;
 }
 
 const addNewProjectListener = () => {
@@ -78,12 +80,13 @@ const addNewProjectListener = () => {
         event.preventDefault();
         const newProject = new Project(projectName.value);
         addNewProject(newProject);
-        addNewProjectToSidebar(newProject);
+        const sidebarProject = addNewProjectToSidebar(newProject);
         addProjectDisplay.style.display = 'none';
         projectName.value = '';
         increaseSidebarHeight();
         populateStorage();
         displayProjectTasksListener();
+        displayProjectTasksOnly(sidebarProject);
     })
 
     cancel.addEventListener('click', () => {
@@ -92,14 +95,13 @@ const addNewProjectListener = () => {
     })
 }
 
-const deleteProject = (event) => {
-    const projectsList = document.querySelectorAll('.project-details');
+const deleteProject = (deleteSymbol, confirmScreen) => {
+    const projectElements = document.querySelectorAll('.project-details');
 
-    projectsList.forEach(project => {
-        if (project.querySelector('.delete-project-btn') === event.target){
+    projectElements.forEach(project => {
+        if (project.querySelector('.delete-project-btn') === deleteSymbol){
             const projectInstance = projectsObject[project.dataset.projectid];
             for (let i = 0; i < projectInstance.taskArray.length; i++){
-                console.log(projectInstance.taskArray[i]);
                 projectInstance.taskArray[i].deleteTaskInstance();
                 projectInstance.removeTask(projectInstance.taskArray[i].id);
                 i--;
@@ -114,18 +116,36 @@ const deleteProject = (event) => {
             projectsObject[project.dataset.projectid] = null;
             delete projectsObject[project.dataset.projectid];
 
+            confirmScreen.style.display = 'none';
+            populateStorage();
+            loadStorage();
         }
     })
-    populateStorage();
+   
 }
 
-const deleteProjectListener = () => {
-    const deleteProjectSymbols = document.querySelectorAll('.delete-project-btn');
+const confirmProjectDelete = (deleteSymbol) => {
+    const confirmScreen = document.querySelector('.del-confirm-screen');
+    const message = document.querySelector('.del-text');
+    const confirmButton = document.querySelector('.del-option');
+    const cancelButton = document.querySelector('.cancel-option');
 
-    deleteProjectSymbols.forEach(symbol => {
-        symbol.removeEventListener('click', deleteProject);
-        symbol.addEventListener('click', deleteProject);
-    })
+    confirmScreen.style.display = 'block';
+    const projectName = deleteSymbol.closest('.project-heading-container').querySelector('.project-name');
+    message.textContent = `Delete ${projectName.textContent} ?`;
+
+    confirmButton.addEventListener('click', () => deleteProject(deleteSymbol, confirmScreen));
+    cancelButton.addEventListener('click', () => confirmScreen.style.display = 'none');
+}   
+
+const deleteProjectListener = () => {
+    const tasksContainer = document.querySelector('.todos-container');
+
+    tasksContainer.addEventListener('click', (event) => {
+        if (event.target.className === 'delete-project-btn'){
+            confirmProjectDelete(event.target);
+        }
+    }, false)
 }
 
 export { addNewProjectListener, deleteProjectListener, addNewProject, addNewProjectToSidebar }
