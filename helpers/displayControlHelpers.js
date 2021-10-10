@@ -1,8 +1,17 @@
 import { displayEditTaskForm, showDetailsListener } from '../src/pageEffects.js';
 import { addTaskMainPage, deleteTaskListener, changeTaskCompleteStatus } from '../src/taskDomChanges.js';
 import { addNewProject } from '../src/projectDomChanges.js';
-import { Task, Project } from '../src/createProjects.js';
+import { Task, Project, projectsObject, tasksObject } from '../src/createProjects.js';
 
+const populateStorage = () => {
+    localStorage.setItem('projectsObject', JSON.stringify(projectsObject));
+    localStorage.setItem('tasksObject', JSON.stringify(tasksObject));
+}
+
+const setObjects = (projectsStorage, tasksStorage) => {
+    projectsObject = projectsStorage;
+    tasksObject = tasksStorage;
+}
 
 const dateNow = () => {
     let today = new Date();
@@ -52,10 +61,12 @@ const loadProject = (projectsStorage, key) => {
 }
 
 // Hides project if it has no tasks to display when filtered
-const hideProjects = (projects) => {
-    projects.forEach(project => {
-        if (!project.querySelector('.todo-list-item')) project.style.display = 'none';
-    })
+const hideProjects = (projectElements) => {
+    if (projectElements){
+        projectElements.forEach(project => {
+            if (!project.querySelector('.todo-list-item')) project.style.display = 'none';
+        })
+    }   
 }
 
 const resetDisplay = () => {
@@ -79,6 +90,8 @@ export {
     restoreListeners,
     resetDisplay,
     loadProject,
+    populateStorage,
+    setObjects,
 }
 
 
