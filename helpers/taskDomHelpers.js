@@ -5,6 +5,7 @@ const controlPriorityColor = (priority) => {
     else return '#f14e4e';
 
 }
+
 const createTaskMainDetails = (task) => {
     const mainDetailsContainer = document.createElement('div');
     mainDetailsContainer.classList.add('radio-title-container');
@@ -34,10 +35,14 @@ const createTaskButtons = () => {
     const editButton = document.createElement('button');
     const deleteButton = document.createElement('button');
     const buttonArray = [ detailsButton, editButton, deleteButton];
-    buttonArray.forEach(button => button.type = 'button');
     detailsButton.classList.add('details-button'); detailsButton.textContent = 'Details';
-    editButton.classList.add('edit-button'); editButton.textContent = 'Edit';
-    deleteButton.classList.add('delete-button'); deleteButton.textContent = 'Delete';
+    editButton.classList.add('edit-button', 'icon-edit');
+    deleteButton.classList.add('delete-button', 'icon-delete'); 
+
+    buttonArray.forEach(button => {
+        button.type = 'button'
+        button.classList.add('btn', 'btn-3', 'btn-3d'); 
+    });
 
     return buttonArray;
 }
