@@ -1,8 +1,7 @@
 import { Task, projectsObject, tasksObject } from './createProjects.js';
 import { createTaskMainDetails, createTaskButtons, createDetailsContainer, controlPriorityColor } from '../helpers/taskDomHelpers.js';
 import { increaseSidebarHeight, showDetailsListener, displayEditTaskForm } from './pageEffects.js';
-import { populateStorage } from './displayControl.js';
-
+import { populateStorage } from '../helpers/displayControlHelpers.js';
 
 /*
     The function finds the project that the user wants to add
