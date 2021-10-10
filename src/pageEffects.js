@@ -1,6 +1,10 @@
 import { format } from 'date-fns';
 
-// This module creates functions that dynamically change css properties 
+/* 
+    This module is for functions with the purpose of
+    dynamically changing css properties.
+*/
+
 const displayNewProjectForm = () => {
     const addProjectButton = document.querySelector('.add-project-container');
     const addProjectForm = document.querySelector('.add-project-screen');
@@ -59,7 +63,7 @@ const setEditFormValues = (event) => {
             const taskDate = task.querySelector('#todo-date');
 
             /* 
-                Sets the default input content to be the current values of the
+                Sets the default input values to be the current values of the
                 task to be edited.
             */ 
             taskFormName.value = taskName.textContent;
@@ -79,6 +83,11 @@ const setEditFormValues = (event) => {
     })
 }
 
+/*
+    Since the listener loops through all buttons again when a new
+    task is added the removeEventListener is included so the buttons
+    don't have multiple click events attached to them.
+*/
 const displayEditTaskForm = () => {
     const editButtons = document.querySelectorAll('.edit-button');
     
@@ -123,11 +132,6 @@ const showDetails = (event) => {
     increaseSidebarHeight();
 }
 
-/*
-    Since the listener loops through all buttons again when a new
-    task is added the removeEventListener is included so the buttons
-    don't have multiple click events attached to them.
-*/
 const showDetailsListener = () => {
     const detailsButtons = document.querySelectorAll('.details-button');
 
@@ -135,6 +139,22 @@ const showDetailsListener = () => {
         button.removeEventListener('click', showDetails)
         button.addEventListener('click', showDetails)
     })
+}
+
+// The page is only displayed if all projects in the DOM are hidden or if there are no projects in the DOM.
+const toggleFinishedPage = (projectElements) => {
+    const allProjectsCompletePage = document.querySelector('.projects-complete-container');
+    if (!projectElements) {
+        allProjectsCompletePage.style.display = 'block';
+        return;
+    }
+
+    const projectsHidden = Array.from(projectElements).some( (projectElement) => {
+        return projectElement.style.display !== 'none';
+    });
+
+    if (!projectsHidden || Array.from(projectElements).length === 0) allProjectsCompletePage.style.display = 'block';
+    else allProjectsCompletePage.style.display = 'none';
 }
 
 
@@ -147,4 +167,5 @@ export {
     increaseSidebarHeight, 
     showDetailsListener,
     displayEditTaskForm,
+    toggleFinishedPage,
 }
