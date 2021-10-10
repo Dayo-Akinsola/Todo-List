@@ -1,23 +1,27 @@
-import { Project, projectsObject, tasksObject } from './createProjects.js';
+import { Project } from './createProjects.js';
 import { updateTaskTally } from './taskDomChanges.js';
 import { increaseSidebarHeight, toggleFinishedPage } from './pageEffects.js';
 import { addNewProject, addNewProjectToSidebar } from './projectDomChanges.js';
+import * as displayHelpers from '../helpers/displayControlHelpers.js';
 import { isThisWeek, isAfter, add } from 'date-fns';
-import { dateNow, loadTasks, hideProjects, restoreListeners, resetDisplay, loadProject, restoreTaskMethods } from '../helpers/displayControlHelpers.js';
 
 
-const populateStorage = () => {
-    localStorage.setItem('projectsObject', JSON.stringify(projectsObject));
-    localStorage.setItem('tasksObject', JSON.stringify(tasksObject));
+// These functions help the app keep functionality when a page is replaced
+const loadHelper = (projectsStorage, tasksStorage, projectElements) => {
+    displayHelpers.setObjects(projectsStorage, tasksStorage);
+    displayHelpers.hideProjects(projectElements);
+    displayHelpers.restoreListeners();
+    toggleFinishedPage(projectElements);
+    displayProjectTasksListener();
 }
 
 // Displays all projects from local storage when the page is first loaded
 const loadStorage = () => {
     if (!localStorage.getItem('projectsObject')){
-        populateStorage();
+        displayHelpers.populateStorage();
     }
     else{
-        resetDisplay();
+        displayHelpers.resetDisplay();
         document.querySelector('.sidebar-projects-list').textContent = '';
 
         const pageHeading = document.querySelector('#todos-heading');
@@ -32,21 +36,20 @@ const loadStorage = () => {
         // Defined element here first so it's value at the end of the loop can be used outside the loop's scope
         let projectElements;
         for (const key in projectsStorage){ 
-            loadProject(projectsStorage, key);
+            displayHelpers.loadProject(projectsStorage, key);
             addNewProjectToSidebar(projectsStorage[key]);   
             projectElements = document.querySelectorAll('.project-details');
             const lastProject = projectElements[projectElements.length - 1];
             projectsStorage[key].taskArray.forEach(task => {
-                restoreTaskMethods(task, tasksStorage, projectsStorage, key);                    
-                loadTasks(tasksStorage, task, lastProject);
+                displayHelpers.restoreTaskMethods(task, tasksStorage, projectsStorage, key);                    
+                displayHelpers.loadTasks(tasksStorage, task, lastProject);
                 updateTaskTally(projectsStorage[key]);
             })
         }
-        projectsObject = projectsStorage;
-        tasksObject = tasksStorage;
+        displayHelpers.setObjects(projectsStorage, tasksStorage);
         toggleFinishedPage(projectElements);
         increaseSidebarHeight();
-        restoreListeners();
+        displayHelpers.restoreListeners();
         displayProjectTasksListener();
     }
 }
@@ -72,29 +75,28 @@ const todayTaskFilter = () => {
         const tasksStorage = JSON.parse(localStorage.getItem('tasksObject'));
         if (pageHeading.textContent !== 'Today'){
             pageHeading.textContent = 'Today';
-            resetDisplay();
+            displayHelpers.resetDisplay();
             todaySidebarLink.classList.add('active');
+
+            
 
             let projectElements;
             for (const key in projectsStorage){
-                loadProject(projectsStorage, key);
+                displayHelpers.loadProject(projectsStorage, key);
 
                 projectElements = document.querySelectorAll('.project-details');
                 const lastProject = projectElements[projectElements.length - 1];
+                lastProject.querySelector('.symbol-container').style.visibility = 'hidden';
+
                 projectsStorage[key].taskArray.forEach(task => {
-                    restoreTaskMethods(task, tasksStorage, projectsStorage, key);                    
-                    if (tasksStorage[task.id].dueDate === dateNow()){
-                        loadTasks(tasksStorage, task, lastProject);
+                    displayHelpers.restoreTaskMethods(task, tasksStorage, projectsStorage, key);                    
+                    if (tasksStorage[task.id].dueDate === displayHelpers.dateNow()){
+                        displayHelpers.loadTasks(tasksStorage, task, lastProject);
                     }
                     updateTaskTally(projectsStorage[key]);
                 })
             }
-            hideProjects(projectElements);
-            toggleFinishedPage(projectElements);
-            projectsObject = projectsStorage;
-            tasksObject = tasksStorage;
-            restoreListeners();
-            displayProjectTasksListener();
+            loadHelper(projectsStorage, tasksStorage, projectElements);
         }
     })
 }
@@ -108,30 +110,27 @@ const thisWeekTaskFilter = () => {
         const tasksStorage = JSON.parse(localStorage.getItem('tasksObject'));
         if (pageHeading.textContent !== 'This Week'){
             pageHeading.textContent = 'This Week';
-            resetDisplay();
+            displayHelpers.resetDisplay();
             weekSidebarLink.classList.add('active');
             
             let projectElements;
             for (const key in projectsStorage){
-                loadProject(projectsStorage, key);
+                displayHelpers.loadProject(projectsStorage, key);
 
                 projectElements = document.querySelectorAll('.project-details');
                 const lastProject = projectElements[projectElements.length - 1];
+                lastProject.querySelector('.symbol-container').style.visibility = 'hidden';
+
                 projectsStorage[key].taskArray.forEach(task => {
                     const splitDate = task.dueDate.split('/');
-                    restoreTaskMethods(task, tasksStorage, projectsStorage, key);                    
+                    displayHelpers.restoreTaskMethods(task, tasksStorage, projectsStorage, key);                    
                     if (isThisWeek(new Date(splitDate[2], splitDate[1] - 1, splitDate[0]))){
-                        loadTasks(tasksStorage, task, lastProject);
+                        displayHelpers.loadTasks(tasksStorage, task, lastProject);
                     }
                     updateTaskTally(projectsStorage[key]);
                 })
             }
-            hideProjects(projectElements);
-            toggleFinishedPage(projectElements);
-            projectsObject = projectsStorage;
-            tasksObject = tasksStorage;
-            restoreListeners();
-            displayProjectTasksListener();
+            loadHelper(projectsStorage, tasksStorage, projectElements);
         }
     })
 }
@@ -145,28 +144,25 @@ const urgentTaskFilter = () => {
         const tasksStorage = JSON.parse(localStorage.getItem('tasksObject'));
         if (pageHeading.textContent !== 'Urgent'){
             pageHeading.textContent = 'Urgent';
-            resetDisplay();
+            displayHelpers.resetDisplay();
             urgentSidebarLink.classList.add('active');
 
             let projectElements;
             for (const key in projectsStorage){
-                loadProject(projectsStorage, key);
+                displayHelpers.loadProject(projectsStorage, key);
                 projectElements = document.querySelectorAll('.project-details');
                 const lastProject = projectElements[projectElements.length - 1];
+                lastProject.querySelector('.symbol-container').style.visibility = 'hidden';
+
                 projectsStorage[key].taskArray.forEach(task => {
-                    restoreTaskMethods(task, tasksStorage, projectsStorage, key);                    
+                    displayHelpers.restoreTaskMethods(task, tasksStorage, projectsStorage, key);                    
                     if (task.priority === 'urgent'){
-                        loadTasks(tasksStorage, task, lastProject);
+                        displayHelpers.loadTasks(tasksStorage, task, lastProject);
                     }
                     updateTaskTally(projectsStorage[key]);
                 })
             }
-            hideProjects(projectElements);
-            toggleFinishedPage(projectElements);
-            projectsObject = projectsStorage;
-            tasksObject = tasksStorage;
-            restoreListeners();
-            displayProjectTasksListener();
+            loadHelper(projectsStorage, tasksStorage, projectElements);
         }
     })
 }
@@ -181,44 +177,39 @@ const overdueTaskFilter = () => {
         const tasksStorage = JSON.parse(localStorage.getItem('tasksObject'));
         if (pageHeading.textContent !== 'Overdue'){
             pageHeading.textContent = 'Overdue';
-            resetDisplay();
+            displayHelpers.resetDisplay();
             overdueSidebarLink.classList.add('active');
 
             let projectElements;
             for (const key in projectsStorage){
 
-                loadProject(projectsStorage, key);
+                displayHelpers.loadProject(projectsStorage, key);
                 projectElements = document.querySelectorAll('.project-details');
                 const lastProject = projectElements[projectElements.length - 1];
+                lastProject.querySelector('.symbol-container').style.visibility = 'hidden';
+
                 projectsStorage[key].taskArray.forEach(task => {
                     const splitDate = task.dueDate.split('/');
                     
                     //Add day to due date so tasks due today are not classed as overdue. 
                     const lateDate = add(new Date(splitDate[2], splitDate[1] - 1, splitDate[0]), {days: 1});
-
-                    restoreTaskMethods(task, tasksStorage, projectsStorage, key);                    
+                    displayHelpers.restoreTaskMethods(task, tasksStorage, projectsStorage, key);                    
                     if (isAfter(new Date(), lateDate)){
-                        loadTasks(tasksStorage, task, lastProject);
+                        displayHelpers.loadTasks(tasksStorage, task, lastProject);
                     }
                     updateTaskTally(projectsStorage[key]);
                 })
             }
-            hideProjects(projectElements)
-            toggleFinishedPage(projectElements);
-            projectsObject = projectsStorage;
-            tasksObject = tasksStorage;
-            restoreListeners();
-            displayProjectTasksListener();
+            loadHelper(projectsStorage, tasksStorage, projectElements);
         }
     })
 }
 
 const displayProjectTasksOnly = (sidebarProject) => {
     const pageHeading = document.querySelector('#todos-heading');
-    const sidebarProjectName = sidebarProject.querySelector('.sidebar-project-name');
     if (!Array.from(sidebarProject.classList).includes('active')){
         pageHeading.textContent = '';
-        resetDisplay();
+        displayHelpers.resetDisplay();
         sidebarProject.classList.add('active');  
         
         const projectsStorage = JSON.parse(localStorage.getItem('projectsObject'));
@@ -229,27 +220,29 @@ const displayProjectTasksOnly = (sidebarProject) => {
                 addNewProject(projectsStorage[key]); 
 
                 // Because of the unique id only one project will render
-                const project = document.querySelector('.project-details');
+                const projectElement = document.querySelector('.project-details');
+                const projectHeadingContainer = projectElement.querySelector('.project-heading-container');
+                const projectName = projectElement.querySelector('.project-name');
+                projectHeadingContainer.style.justifyContent = 'space-around'; projectHeadingContainer.style.marginBottom = '1em';
+                projectName.style.fontSize = '24px'; projectName.style.fontWeight = '600';
                 
                 if (projectsStorage[key].taskArray.length > 0){
                     projectsStorage[key].taskArray.forEach(task => {
-                        restoreTaskMethods(task, tasksStorage, projectsStorage, key);                    
-                        loadTasks(tasksStorage, task, project);
+                        displayHelpers.restoreTaskMethods(task, tasksStorage, projectsStorage, key);                    
+                        displayHelpers.loadTasks(tasksStorage, task, projectElement);
                     })
                 }
             }
             updateTaskTally(projectsStorage[key]);
         }
-        projectsObject = projectsStorage;
-        tasksObject = tasksStorage;
-        restoreListeners();
-        displayProjectTasksListener();  
-        const allProjectsCompletePage = document.querySelector('.projects-complete-container');
-        allProjectsCompletePage.style.display = 'none';
+        displayHelpers.setObjects(projectsStorage, tasksStorage);
+        displayHelpers.restoreListeners();
+        displayProjectTasksListener();
+        const projectElements = document.querySelectorAll('.project-details');  
+        toggleFinishedPage(projectElements);
     }
 
 }
-
 
 const displayProjectTasksListener = () => {
     const sidebarProjectLinks = document.querySelectorAll('.sidebar-project');
@@ -257,13 +250,10 @@ const displayProjectTasksListener = () => {
     sidebarProjectLinks.forEach(sidebarProject => {
         sidebarProject.addEventListener('click', () => displayProjectTasksOnly(sidebarProject));
     })
+   
 }
 
-
-
-
 export { 
-    populateStorage, 
     loadStorage, 
     todayTaskFilter, 
     displayAllTasks, 
