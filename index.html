@@ -2,6 +2,7 @@
 <html>     
     <head>
         <title>Todo List App</title>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
     </head>
     <body>
         <script defer src="main.js"></script>
@@ -10,25 +11,25 @@
             <div class="add-project-container">
                 <span class="add-project-button">
                     <span id="addition-symbol">&#43;</span>
-                    <span id="add-project-text">Add New Project</span>
+                    <span id="add-project-text">Add Project</span>
                 </span>
             </div>
         </header>
         <div class="sidebar">
             <ul class="display-categories">
-                <li class="category-item" id="all-item">
+                <li class="sidebar-item category-item" id="all-item">
                     <span class="nav-link" id="all">All</span>
                 </li>
-                <li class="category-item" id="today-item">
+                <li class="sidebar-item category-item" id="today-item">
                     <span class="nav-link" id="today">Today</span>
                 </li>
-                <li class="category-item" id="this-week-item">
+                <li class="sidebar-item category-item" id="this-week-item">
                     <span class="nav-link" id="this-week">This Week</span>
                 </li>
-                <li class="category-item" id="urgent-item">
+                <li class="sidebar-item category-item" id="urgent-item">
                     <span class="nav-link" id="urgent-sidebar">Urgent</span>
                 </li>
-                <li class="category-item" id="overdue-item">
+                <li class="sidebar-item category-item" id="overdue-item">
                     <span class="nav-link" id="overdue">Overdue</span>
                 </li>
             </ul>
@@ -70,6 +71,21 @@
                     </div>
                 </div>
             </form>
+        </div>
+        <div class="del-confirm-screen">
+            <div class="del-confirm-container">
+                <div class="del-text-container">
+                    <p class="del-text"></p>
+                </div>
+                <div class="confirm-options">
+                    <button class="confirm-button del-option">Delete</button>
+                    <button class="confirm-button cancel-option">Cancel</button>
+                </div>
+            </div>
+        </div>
+        <div class="projects-complete-container">
+            <img class="projects-complete-img" src="../src/img/complete.jpg" alt="tasks-finished" />
+            <p class="projects-complete-text">Looks like you're all done here</p>
         </div>
     </body>
 </html>
