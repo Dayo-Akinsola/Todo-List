@@ -13,9 +13,9 @@ body{
     align-items: center;
     padding-top: 10px;
     padding-bottom: 10px;
-    color: #212529;
+    color: white;
     width: 100%;
-    background-color: #eef0f2;
+    background-color: #b5b5d6;
 }
 
 #page-heading{
@@ -25,18 +25,26 @@ body{
 
 .add-project-container{
     cursor: pointer;
-    padding-left: 5px;
-    padding-right: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease-in-out;
+    transition: color 0.3s ease-in-out;
 }
 
 .add-project-container:hover {
-    background-color: #00008c40;
+    background-color: #eef0f2;
+    color: #b5b5d6;
+}
 
+.add-project-button:hover #addition-symbol{
+    transform: rotate(180deg);
 }
 
 #addition-symbol{
     font-weight: 500;
     font-size: 2.2em;
+    transition: transform 0.6s ease-in-out;
 }
 
 .add-project-button{
@@ -46,12 +54,26 @@ body{
 }
 
 .delete-project-btn{
-    font-size: 1.0rem;
+    font-size: 1.4rem;
     font-weight: 700;
-    margin-left: 10px;
+    margin-left: 20px;
     cursor: pointer;
+    border-style: solid;
+    background-color: #8d8d9a;
+    color: #F2F2FF;
+    width: 39px;
+    height: 32px;
+    padding: 0px 5px 0px 5px;
+    border-radius: 27px;
+    font-size: 1.33em;
+    text-align: center;
+    transition: all 0.4s ease-in-out;
 }
 
+.delete-project-btn:hover{
+    color: #8d8d9a;
+    background-color: #F2F2FF;
+}
 .symbol-container{
     display: flex;
     align-items: stretch;
@@ -71,10 +93,10 @@ body{
 }
 
 .sidebar{
-    background-color: #212529;
+    background-color: #F2F2FF;
+    color: #212529;
     height: 700px;
     width: 250px;
-    color: white;
     position: absolute;
     z-index: 1;
     overflow: auto;
@@ -88,22 +110,26 @@ body{
 }
 
 .category-item{
-    cursor: pointer;
     margin: 4px 0 10px 0;
     padding: 8px 0 8px 12px;
 }
 
-.category-item:hover{
-    background-color: darkgrey;
+.sidebar-item:hover{
+    cursor: pointer;
+    background-color: #b5b5d6;
+}
+
+.sidebar-item.active{
+    background-color: #b5b5d6;
 }
 
 .sidebar-projects{
-    padding-left: 12px;
     margin-top: 14px;    
 }
 
 #projects-subheading{
     font-size: larger;
+    padding-left: 12px;
 }
 
 .add-project-screen{
@@ -111,7 +137,7 @@ body{
     position: fixed;
     left: 0;
     top: 0;
-    z-index: 1;
+    z-index: 10;
     width: 100%;
     height: 100%;
     background-color: rgb(0,0,0); 
@@ -182,11 +208,14 @@ body{
 
 #todos-heading{
     color: #212529;
-    font-size: 1.9rem;
+    font-size: 1.5em;
 }
 
 .project-name{
     margin-top: 25px;
+    font-weight: 500;
+    padding-left: 10px;
+    font-size: 21px;
 }
 
 .projects-list{
@@ -198,13 +227,17 @@ body{
     flex-direction: row;
     align-items: flex-end;
     justify-content: space-between;
+    align-items: baseline;
 }
 
 .project-heading{
     display: flex;
     flex-direction: row;
     align-items: baseline;
-    cursor: pointer;
+}
+
+.project-details{
+    margin-bottom: 2em;
 }
 
 
@@ -213,11 +246,23 @@ body{
     font-weight: 700;
     margin-left: 20px;
     cursor: pointer;
+    border-style: solid;
+    background-color: #8d8d9a;
+    color: #F2F2FF;
+    padding: 0px 5px 0px 5px;
+    border-radius: 27px;
+    font-size: 30px;
+    width: 39px;
+    height: 32px;
+    text-align: center;
+    transition: all 0.4s ease-in-out;
 }
 
 .add-task-symbol:hover{
-    background-color: rgba(156, 154, 154, 0.247);
-}
+    color: #8d8d9a;
+    background-color: #F2F2FF;}
+
+
 
 .todo-list-items{
     display: flex;
@@ -245,7 +290,7 @@ body{
 }
 
 .todo-list-item.checked{
-    background-color: #6e6e6e3f;
+    background-color: #b5b5d6;
 }
   
 .fas{
@@ -342,7 +387,7 @@ body{
 
 .todos-container{
     margin-left: 426px;
-    margin-top: 40px;
+    margin-top: 2em;
     width: 50%;
     position: relative;
 }
@@ -385,18 +430,11 @@ body{
 .edit-task-buttons{
     display: flex;
     flex-direction: row;
-    width: 183px;
+    width: 13.5rem;
     justify-content: space-evenly;
 }
 
-.down-arrow{
-    color: black;
-    font-size: 20px;
-}
 
-.project-name{
-    padding-left: 10px;
-}
 
 .sidebar-project{
     margin-top: 16px;
@@ -406,11 +444,6 @@ body{
     padding-bottom: 5px;
     word-break: break-all;
     align-items: center;
-}
-
-.sidebar-project:hover{
-    cursor: pointer;
-    background-color: darkgrey;
 }
 
 .task-tally{
@@ -423,19 +456,9 @@ body{
     padding-left: 0;
 }
 
-.sidebar-project-nam::before{
-    list-style-type: none;
-    width: 1.25em;
-    line-height: 0;
-    content: '\276F';
-    color: white;
-    display: inline-block;
-    transition: transform .35s ease;
-    transform-origin: .5em 50%;
-}
-
 .sidebar-project-name{
     cursor: pointer;
+    margin-left: 12px;
 }
 
 .sidebar-task-title{
@@ -446,27 +469,12 @@ body{
     margin-top: 4px;
 }
 
-.sidebar-project-name:hover::before{
-    transform: rotate(90deg);
-}
-
-.sidebar-tasks-collapse.hidden{
-    display: none;
-}
-
-.sidebar-tasks-collapse.shown{
-    display: block;
-    transition: max-height 0.2s ease-out;
-    overflow: hidden;
-    color: white;
-}
-
 .add-task-screen{
     display: none;
     position: fixed;
     left: 0;
     top: 0;
-    z-index: 1;
+    z-index: 10;
     width: 100%;
     height: 100%;
     background-color: rgb(0,0,0); 
@@ -656,3 +664,198 @@ body{
 #task-form-date{
     height: 26px;
 }
+
+.btn{
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    padding: 0;
+    display: inline-block;
+    letter-spacing: 1px;
+    font-weight: 500;
+    outline: none;
+    position: relative;
+    padding: 5px 5px 5px 5px;
+    color: #fff;
+    background: #212529;
+    border-radius: 10px;
+    width: 2.4em;
+    height: 2.0em;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+.btn::before{
+    color: #eef0f2;
+    z-index: 2;
+    border-radius: 10px 0 0 10px;
+    position: absolute;
+    height: 100%;
+    left: 0;
+    top: 0;
+    line-height: 1.6;
+    font-size: 114%;
+    width: 20px;
+    text-align: center;
+    margin-left: 16%;
+}
+
+.details-button{
+    padding: 0.3em 1.2em;
+    border: 0.16em solid #00008c40;
+    margin: 0 0.1em 0.1em 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-weight: 600;
+    color: black;
+    text-align: center;
+    transition: all 0.2s;
+    cursor: pointer;
+    background-color: white;
+    width: 7.7em;
+}
+
+.details-button:hover{
+    color: #FFFFFF;
+    background-color: #212529;
+}
+
+.icon-details:hover::before{
+    background-color: whitesmoke;
+    color: black;
+}
+
+.icon-edit::before{
+    font-family: "Font Awesome 5 Free"; 
+    font-weight: 400; 
+    content: "\f044";
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    margin-left: 7px;
+}
+
+.icon-delete::before{
+    font-family: "Font Awesome 5 Free"; 
+    font-weight: 600; 
+    content: "\f05e";
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+}
+
+.projects-complete-container{
+    display: none;
+    flex-direction: column;
+}
+
+.projects-complete-img{
+    position: absolute;
+    height: 360px;
+    margin-left: auto;
+    margin-right: auto;
+    top: 11.8rem;
+    left: 31rem;
+    width: 38%;
+    opacity: 0.8;
+}
+
+.projects-complete-text{
+    color: #b5b5d6;
+    margin-top: 1.8em;
+    font-size: 24px;
+    text-align: center;
+}
+
+.del-confirm-screen{
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.05);
+    padding-top: 150px;
+}
+
+.del-confirm-container{
+    color: black;
+    margin: 0 auto;
+    width: 397px;
+    height: 70.2px;
+    top: 1.8rem;
+    border-style: ridge;
+    box-shadow: 10px 10px 10px rgba(156, 154, 154, 0.247);
+    animation-name: animatetop;
+    animation-duration: 0.6s;
+    animation-timing-function: ease-in-out;
+}
+
+.del-text-container{
+    height: inherit;
+    background-color: #eef0f2;
+}
+
+.del-text{
+    text-align: center;
+    vertical-align: middle;
+    font-size: 20px;
+    line-height: 68px;
+}
+
+.confirm-options{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-right: -2px;
+    background-color: #b5b5d6;
+}
+
+.confirm-button{
+    padding: 0.3em 1.2em;
+    border: 0.16em solid #00008c3d;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-weight: 300;
+    font-size: 16px;
+    color: black;
+    text-align: center;
+    transition: all 0.2s;
+    cursor: pointer;
+    background-color: white;
+    width: 10rem;
+    height: 2.5em;
+    margin-left: 1em;
+}
+
+.confirm-button:hover{
+    color: white;
+    background-color: #212529;
+}
+
+.confirm-button:active{
+    transform: scale(0.9);
+}
+
+#page-heading::before{
+    font-family: "Font Awesome 5 Free"; 
+    font-weight: 900; 
+    content: "\f518";
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    margin-right: 0.6em;
+}
+
+
