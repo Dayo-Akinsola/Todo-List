@@ -77,9 +77,6 @@ const todayTaskFilter = () => {
             pageHeading.textContent = 'Today';
             displayHelpers.resetDisplay();
             todaySidebarLink.classList.add('active');
-
-            
-
             let projectElements;
             for (const key in projectsStorage){
                 displayHelpers.loadProject(projectsStorage, key);
