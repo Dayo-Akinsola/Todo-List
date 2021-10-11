@@ -6,8 +6,8 @@ A todo list app made with HTML, CSS and Javascript that was created as part of T
 
 ## Features
 
-- Users can create projects and assign tasks to each project.
+- Create projects and assign tasks to each project.
 - View details of a task.
 - Delete and update projects and tasks.
 - Set the priority of a task.
-- Various categories for which tasks a user wants to view.
+- Filter tasks based on their due date, urgency, or the project they belong to.
